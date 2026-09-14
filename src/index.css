@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --font-weight-bold: 900;
+  --font-weight-extrabold: 900;
+  --font-weight-semibold: 500;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  
+  --color-artiq-50: #eaf6ff;
+  --color-artiq-100: #bfe6ff;
+  --color-artiq-500: #0da6d8;
+  --color-artiq-600: #006074;
+  --color-artiq-700: #002c36;
+  --color-artiq-800: #111e2f;
+  
+  --color-baristico-50: #f4f1e4;
+  --color-baristico-100: #e8e0d4;
+  --color-baristico-200: #dfd4c5;
+  --color-baristico-300: #cbb8a2;
+  --color-baristico-400: #a3724a;
+  --color-baristico-500: #8b5e3c;
+  --color-baristico-600: #774d30;
+  --color-baristico-700: #5b4638;
+  --color-baristico-800: #3b2c23;
+  --color-baristico-900: #1c1c1c;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 400; /* Inter Regular */
+  background-color: #fcfcfd;
+  color: #1f2937;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 900; /* Inter Black */
+}
+
+p {
+  font-weight: 400; /* Inter Regular */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scaleUp {
+  animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+

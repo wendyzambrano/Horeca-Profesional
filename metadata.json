@@ -1,0 +1,6 @@
+{
+  "name": "Universo Horeca",
+  "description": "Plataforma de conexión eficiente entre proveedores y locales de hostelería, dividida en los mundos de Artiq (granizadoras, hielo, dispensadores) y Baristico (café, molinos).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
