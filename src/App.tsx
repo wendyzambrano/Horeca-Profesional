@@ -7,7 +7,8 @@ import ProfitabilityCalculator from './components/ProfitabilityCalculator';
 import QuoteBuilder from './components/QuoteBuilder';
 import { 
   Building2, ShoppingCart, Calculator, 
-  Sparkles, Snowflake, Coffee, Layers, ChevronRight, HelpCircle, Info, CheckCircle, ChevronDown
+  Sparkles, Snowflake, Coffee, Layers, ChevronRight, HelpCircle, Info, CheckCircle, ChevronDown,
+  Share2, Link as LinkIcon, Check, Copy
 } from 'lucide-react';
 
 export default function App() {
@@ -20,6 +21,9 @@ export default function App() {
   // Brand filtering in Catalog
   const [selectedBrand, setSelectedBrand] = useState<'all' | 'artiq' | 'baristico'>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  // Direct URL Copy Toast Notification
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Alternating header logo state (every 3 seconds)
   const [activeHeaderIso, setActiveHeaderIso] = useState<0 | 1>(0);
@@ -182,33 +186,143 @@ export default function App() {
     }));
   };
 
-  const scrollToCatalogCategory = (brand: 'all' | 'artiq' | 'baristico') => {
+  // --- SYNC WITH URL HASH (DIRECT LINKING TO UNIVERSO ARTIQ / BARISTICO) ---
+  useEffect(() => {
+    const syncFromHash = (isInitial = false) => {
+      const rawHash = window.location.hash.toLowerCase().replace('#', '').trim();
+      if (!rawHash) {
+        if (!isInitial) {
+          setSelectedBrand('all');
+          setCurrentView('catalog');
+        }
+        return;
+      }
+
+      if (['artiq', 'mundo-artiq', 'universo-artiq'].includes(rawHash)) {
+        setCurrentView('catalog');
+        setSelectedBrand('artiq');
+        setSelectedCategory('all');
+        document.title = 'Universo Artiq | Universo Horeca';
+        if (isInitial) {
+          setTimeout(() => {
+            const el = document.getElementById('mundo-artiq-card') || document.getElementById('catalog-products-grid') || document.getElementById('mundos-horeca');
+            if (el) {
+              const headerOffset = 115;
+              const elementPosition = el.getBoundingClientRect().top;
+              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+              window.scrollTo({ top: Math.max(0, offsetPosition), behavior: 'smooth' });
+            }
+          }, 200);
+        }
+      } else if (['baristico', 'mundo-baristico', 'universo-baristico'].includes(rawHash)) {
+        setCurrentView('catalog');
+        setSelectedBrand('baristico');
+        setSelectedCategory('all');
+        document.title = 'Universo Barístico | Universo Horeca';
+        if (isInitial) {
+          setTimeout(() => {
+            const el = document.getElementById('mundo-baristico-card') || document.getElementById('catalog-products-grid') || document.getElementById('mundos-horeca');
+            if (el) {
+              const headerOffset = 115;
+              const elementPosition = el.getBoundingClientRect().top;
+              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+              window.scrollTo({ top: Math.max(0, offsetPosition), behavior: 'smooth' });
+            }
+          }, 200);
+        }
+      } else if (['catalogo', 'todos', 'catalog', 'equipos'].includes(rawHash)) {
+        setCurrentView('catalog');
+        setSelectedBrand('all');
+        document.title = 'Universo Horeca | Catálogo Profesional';
+      } else if (['calculadora', 'simulador', 'calculator', 'roi'].includes(rawHash)) {
+        setCurrentView('calculator');
+        document.title = 'Simulador de Rentabilidad | Universo Horeca';
+      } else if (['presupuesto', 'cotizacion', 'quote', 'carrito'].includes(rawHash)) {
+        setCurrentView('quote');
+        document.title = 'Mi Presupuesto | Universo Horeca';
+      }
+    };
+
+    syncFromHash(true);
+
+    const handleHashChange = () => syncFromHash(false);
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const navigateToWorld = (brand: 'all' | 'artiq' | 'baristico', shouldScroll = true) => {
     setCurrentView('catalog');
     setSelectedBrand(brand);
     setSelectedCategory('all');
 
-    // Desplazarse de inmediato a la sección de la categoría seleccionada
-    setTimeout(() => {
-      let targetElement: HTMLElement | null = null;
-      if (brand === 'artiq') {
-        targetElement = document.getElementById('mundo-artiq-card') || document.getElementById('mundos-horeca') || document.getElementById('mobile-catalog-sliders');
-      } else if (brand === 'baristico') {
-        targetElement = document.getElementById('mundo-baristico-card') || document.getElementById('mundos-horeca') || document.getElementById('mobile-catalog-sliders');
-      } else {
-        targetElement = document.getElementById('equipamiento-disponible') || document.getElementById('mobile-catalog-sliders');
-      }
+    const newHash = brand === 'all' ? 'catalogo' : brand;
+    if (window.location.hash.replace('#', '').toLowerCase() !== newHash) {
+      window.history.pushState(null, '', `#${newHash}`);
+    }
 
-      if (targetElement) {
-        const headerOffset = 115; // 64px barra superior fija + ~48px menú móvil flotante + margen
-        const elementPosition = targetElement.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+    if (brand === 'artiq') {
+      document.title = 'Universo Artiq | Universo Horeca';
+    } else if (brand === 'baristico') {
+      document.title = 'Universo Barístico | Universo Horeca';
+    } else {
+      document.title = 'Universo Horeca | Catálogo Profesional';
+    }
 
-        window.scrollTo({
-          top: Math.max(0, offsetPosition),
-          behavior: 'smooth'
-        });
-      }
-    }, 60);
+    if (shouldScroll) {
+      setTimeout(() => {
+        let targetElement: HTMLElement | null = null;
+        if (brand === 'artiq') {
+          targetElement = document.getElementById('mundo-artiq-card') || document.getElementById('mundos-horeca') || document.getElementById('mobile-catalog-sliders');
+        } else if (brand === 'baristico') {
+          targetElement = document.getElementById('mundo-baristico-card') || document.getElementById('mundos-horeca') || document.getElementById('mobile-catalog-sliders');
+        } else {
+          targetElement = document.getElementById('equipamiento-disponible') || document.getElementById('mobile-catalog-sliders');
+        }
+
+        if (targetElement) {
+          const headerOffset = 115;
+          const elementPosition = targetElement.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({
+            top: Math.max(0, offsetPosition),
+            behavior: 'smooth'
+          });
+        }
+      }, 60);
+    }
+  };
+
+  const navigateToView = (view: 'catalog' | 'calculator' | 'quote') => {
+    setCurrentView(view);
+    const hash = view === 'catalog' 
+      ? (selectedBrand === 'all' ? 'catalogo' : selectedBrand) 
+      : (view === 'calculator' ? 'simulador' : 'presupuesto');
+    window.history.pushState(null, '', `#${hash}`);
+    if (view === 'calculator') {
+      document.title = 'Simulador de Rentabilidad | Universo Horeca';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (view === 'quote') {
+      document.title = 'Mi Presupuesto | Universo Horeca';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const copyDirectUrl = (hash: string, universeName: string) => {
+    const url = `${window.location.origin}${window.location.pathname}#${hash}`;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        setToastMessage(`¡Enlace copiado! ${url}`);
+        setTimeout(() => setToastMessage(null), 3500);
+      }).catch(() => {
+        prompt(`Copia el enlace directo para ${universeName}:`, url);
+      });
+    } else {
+      prompt(`Copia el enlace directo para ${universeName}:`, url);
+    }
+  };
+
+  const scrollToCatalogCategory = (brand: 'all' | 'artiq' | 'baristico') => {
+    navigateToWorld(brand, true);
   };
 
   // Filter products based on selected brand & category
@@ -276,7 +390,7 @@ export default function App() {
           <div className="flex justify-between items-center h-16">
             
             {/* Logo area */}
-            <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => { setCurrentView('catalog'); setSelectedBrand('all'); }}>
+            <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => navigateToWorld('all', false)}>
               <div 
                 className={`relative w-10 h-10 rounded-xl flex items-center justify-center p-1.5 shadow-sm border transition-colors duration-500 overflow-hidden ${
                   activeHeaderIso === 0 
@@ -316,38 +430,83 @@ export default function App() {
             </div>
 
             {/* Main Navigation Tabs */}
-            <nav className="hidden md:flex space-x-1">
-              <button
-                type="button"
-                onClick={() => setCurrentView('catalog')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
-                  currentView === 'catalog' 
-                    ? 'bg-gray-100 text-gray-900 shadow-sm' 
-                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+            <nav className="hidden md:flex items-center space-x-1.5 bg-gray-100/80 p-1 rounded-2xl border border-gray-200/60 shadow-xs">
+              <a
+                href="#catalogo"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateToWorld('all');
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  currentView === 'catalog' && selectedBrand === 'all'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-500 hover:text-gray-900 hover:bg-white/60'
                 }`}
               >
-                Catálogo de Equipos
-              </button>
-              
-              <button
-                type="button"
-                onClick={() => setCurrentView('calculator')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
+                Catálogo General
+              </a>
+
+              <a
+                href="#artiq"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateToWorld('artiq');
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  currentView === 'catalog' && selectedBrand === 'artiq'
+                    ? 'bg-artiq-500 text-white shadow-sm'
+                    : 'text-artiq-700 hover:text-artiq-900 hover:bg-artiq-50'
+                }`}
+                title="Ir a Universo Artiq"
+              >
+                <Snowflake className="w-3.5 h-3.5" />
+                <span>Mundo Artiq</span>
+              </a>
+
+              <a
+                href="#baristico"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateToWorld('baristico');
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                  currentView === 'catalog' && selectedBrand === 'baristico'
+                    ? 'bg-[#5b4638] text-[#f4f1e4] shadow-sm'
+                    : 'text-[#5b4638] hover:bg-[#f4f1e4]'
+                }`}
+                title="Ir a Universo Barístico"
+              >
+                <Coffee className="w-3.5 h-3.5" />
+                <span>Mundo Barístico</span>
+              </a>
+
+              <div className="h-4 w-px bg-gray-300 mx-1" />
+
+              <a
+                href="#simulador"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateToView('calculator');
+                }}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                   currentView === 'calculator' 
-                    ? 'bg-gray-100 text-gray-900 shadow-sm' 
-                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'
+                    ? 'bg-white text-emerald-800 shadow-sm' 
+                    : 'text-gray-500 hover:text-gray-900 hover:bg-white/60'
                 }`}
               >
-                <Calculator className="w-4 h-4 text-emerald-600" />
-                Simulador de Rentabilidad
-              </button>
+                <Calculator className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Simulador ROI</span>
+              </a>
             </nav>
 
             {/* Right-aligned interactions (Active cart badge / Contact details) */}
             <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setCurrentView('quote')}
+              <a
+                href="#presupuesto"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigateToView('quote');
+                }}
                 className={`relative p-2 rounded-xl border transition-all flex items-center gap-1.5 ${
                   currentView === 'quote' 
                     ? 'border-gray-900 bg-gray-50 text-gray-900' 
@@ -362,85 +521,92 @@ export default function App() {
                     {quoteItems.length}
                   </span>
                 )}
-              </button>
+              </a>
             </div>
           </div>
         </div>
       </header>
 
       {/* MOBILE FLOATING HEADER NAV (For small touchscreens: World / Brand selector) */}
-      <div className="md:hidden sticky top-16 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200/80 px-3 py-2 shadow-xs">
-        <div className="flex items-center justify-center p-1 bg-gray-100/90 rounded-2xl max-w-sm mx-auto shadow-inner">
-          <button
-            type="button"
-            onClick={() => scrollToCatalogCategory('all')}
-            className={`py-1.5 px-3 rounded-xl text-xs font-bold transition-all text-center ${
+      <div className="md:hidden sticky top-16 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200/80 px-2 py-2 shadow-xs">
+        <div className="flex items-center justify-center p-1 bg-gray-100/90 rounded-2xl max-w-sm mx-auto shadow-inner gap-1">
+          <a
+            href="#catalogo"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateToWorld('all');
+            }}
+            className={`py-1.5 px-2.5 rounded-xl text-xs font-bold transition-all text-center ${
               currentView === 'catalog' && selectedBrand === 'all'
                 ? 'bg-white text-gray-900 shadow-sm'
                 : 'text-gray-500 hover:text-gray-900'
             }`}
           >
             Todos
-          </button>
-          <button
-            type="button"
-            onClick={() => scrollToCatalogCategory('artiq')}
-            className={`flex-1 py-1.5 px-2.5 rounded-xl text-xs font-bold transition-all text-center ${
+          </a>
+          <a
+            href="#artiq"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateToWorld('artiq');
+            }}
+            className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1 ${
               currentView === 'catalog' && selectedBrand === 'artiq'
                 ? 'bg-artiq-500 text-white shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-artiq-700 hover:text-artiq-900'
             }`}
           >
-            Mundo Artiq
-          </button>
-          <button
-            type="button"
-            onClick={() => scrollToCatalogCategory('baristico')}
-            className={`flex-1 py-1.5 px-2.5 rounded-xl text-xs font-bold transition-all text-center ${
+            <Snowflake className="w-3 h-3 shrink-0" />
+            <span>Artiq</span>
+          </a>
+          <a
+            href="#baristico"
+            onClick={(e) => {
+              e.preventDefault();
+              navigateToWorld('baristico');
+            }}
+            className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-all text-center flex items-center justify-center gap-1 ${
               currentView === 'catalog' && selectedBrand === 'baristico'
                 ? 'bg-[#5b4638] text-[#f4f1e4] shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                : 'text-[#5b4638] hover:text-[#3b2c23]'
             }`}
           >
-            Mundo Barístico
-          </button>
+            <Coffee className="w-3 h-3 shrink-0" />
+            <span>Barístico</span>
+          </a>
         </div>
       </div>
 
       {/* FULL-SCREEN HERO BANNER */}
       {currentView === 'catalog' && (
-        <section className="relative w-full min-h-[calc(100vh-4rem)] flex flex-col justify-center items-center text-center overflow-hidden bg-gray-950 px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
-          {/* Background Image with Enhanced Visibility */}
+        <section className="relative w-full h-[calc(100vh-4rem)] min-h-[580px] flex flex-col justify-center items-center text-center overflow-hidden bg-[#ece8e2] px-4 sm:px-6 lg:px-8 py-10">
+          {/* Background Image: Full screen cover */}
           <img 
-            src="https://artiq.com.co/wp-content/uploads/2026/09/horeca-profesional.1-1.webp" 
+            src="https://artiq.com.co/wp-content/uploads/2026/10/horeca-profesional-dos-mundos-mh-1.webp" 
             alt="Horeca Profesional - Maquinaria y Equipamiento Hostelero" 
-            className="absolute inset-0 w-full h-full object-cover object-center scale-100"
+            className="absolute inset-0 w-full h-full object-cover object-center"
             referrerPolicy="no-referrer"
           />
           
-          {/* Balanced Overlays: Image is clearly visible with smooth contrast for text */}
-          <div className="absolute inset-0 bg-black/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/40 to-black/20" />
+          {/* Subtle overlay for optimal contrast and readability */}
+          <div className="absolute inset-0 bg-white/40 md:bg-white/20 backdrop-blur-[0.5px] pointer-events-none" />
 
           {/* Text of the First Section on Top of Banner */}
-          <div className="relative z-10 max-w-4xl mx-auto space-y-6 flex flex-col items-center animate-fadeIn px-2">
-            {/* Category Tag / Badge */}
-            <div className="inline-flex items-center gap-2 bg-black/40 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/25 shadow-xl text-white">
-              <Sparkles className="w-4 h-4 text-amber-300 animate-spin" style={{ animationDuration: '8s' }} />
-              <span className="text-xs font-bold uppercase tracking-wider font-sans text-white">
-                Suministro Premium de Hostelería
-              </span>
-            </div>
-
+          <div className="relative z-10 max-w-5xl mx-auto space-y-3 sm:space-y-4 flex flex-col items-center animate-fadeIn px-4 text-center mt-20 sm:mt-28 md:mt-36 lg:mt-44 mb-6 sm:mb-10">
             {/* Main Headline */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.1] drop-shadow-[0_4px_14px_rgba(0,0,0,0.85)] max-w-3xl">
-              Equipa tu negocio con la maquinaria líder en hostelería
+            <h1 className="text-xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-[#221813] tracking-tight uppercase leading-tight whitespace-nowrap drop-shadow-xs">
+              DOS MUNDOS, UNA EXPERIENCIA.
             </h1>
 
-            {/* Narrative Subtitle */}
-            <p className="text-base sm:text-lg md:text-xl text-white/95 leading-relaxed max-w-2xl mx-auto drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] font-medium">
-              Simplificamos el equipamiento de tu negocio hostelero. Conecta de forma directa con las marcas de referencia en refrigeración comercial y café de especialidad para maximizar tu eficiencia y calidad.
-            </p>
+            {/* Subtitle with matching typographic contrast */}
+            <div className="text-xs sm:text-sm md:text-base lg:text-xl text-[#221813] uppercase tracking-wider leading-relaxed font-medium max-w-3xl">
+              <p>
+                NUEVO DESTINO PARA NEGOCIOS <span className="font-black">GASTRONÓMICOS,</span>
+              </p>
+              <p>
+                <span className="font-black">DE CAFÉ Y REFRIGERACIÓN</span> PROFESIONAL.
+              </p>
+            </div>
           </div>
 
           {/* Scroll Down Indicator */}
@@ -450,10 +616,10 @@ export default function App() {
               document.getElementById('mundos-horeca')?.scrollIntoView({ behavior: 'smooth' });
             }}
             aria-label="Desplazarse a mundos horeca"
-            className="absolute bottom-6 z-10 text-white/80 hover:text-white transition-colors flex flex-col items-center gap-1 animate-bounce"
+            className="absolute bottom-4 sm:bottom-6 z-10 text-gray-700 hover:text-gray-950 transition-colors flex flex-col items-center gap-1 animate-bounce"
           >
-            <span className="text-[10px] uppercase font-bold tracking-widest text-white/70">Descubre Más</span>
-            <ChevronDown className="w-5 h-5" />
+            <span className="text-[10px] uppercase font-bold tracking-widest text-gray-600">Descubre Más</span>
+            <ChevronDown className="w-5 h-5 text-gray-800" />
           </button>
         </section>
       )}
@@ -471,7 +637,7 @@ export default function App() {
               {/* BRAND CARD: ARTIQ */}
               <div 
                 id="mundo-artiq-card"
-                onClick={() => { setSelectedBrand('artiq'); setSelectedCategory('all'); }}
+                onClick={() => navigateToWorld('artiq')}
                 className={`relative overflow-hidden rounded-3xl border p-8 cursor-pointer transition-all duration-300 hover:shadow-xl ${
                   selectedBrand === 'artiq' ? 'block' : 'hidden md:block'
                 } ${
@@ -489,7 +655,7 @@ export default function App() {
                   />
                 </div>
                 
-                <div className="flex justify-between items-start">
+                <div className="flex justify-between items-start flex-wrap gap-2">
                   <div className="bg-artiq-500 text-white p-2.5 rounded-2xl shadow-md flex items-center justify-center w-12 h-12">
                     <img 
                       src="https://artiq.com.co/wp-content/uploads/2026/08/isotipo-artiq-1.svg" 
@@ -498,9 +664,23 @@ export default function App() {
                       referrerPolicy="no-referrer"
                     />
                   </div>
-                  <span className="text-[10px] font-bold font-mono tracking-widest text-artiq-600 bg-artiq-50 px-2.5 py-1 rounded-full uppercase">
-                    Mundo Artiq
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold tracking-widest text-artiq-600 bg-artiq-50 px-2.5 py-1 rounded-full uppercase border border-artiq-200/50">
+                      Mundo Artiq
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        copyDirectUrl('artiq', 'Universo Artiq');
+                      }}
+                      className="inline-flex items-center gap-1 text-[11px] font-bold text-artiq-700 bg-white/95 hover:bg-artiq-100 border border-artiq-200 px-2.5 py-1 rounded-xl transition-all shadow-2xs active:scale-95"
+                      title="Copiar URL directa de Universo Artiq"
+                    >
+                      <Copy className="w-3 h-3" />
+                      <span>Copiar URL</span>
+                    </button>
+                  </div>
                 </div>
 
                 <div className="mt-6">
@@ -546,16 +726,18 @@ export default function App() {
                   </span>
                 </div>
 
-                <div className="mt-6 flex items-center text-xs font-bold text-artiq-700 gap-1">
-                  <span>Filtrar catálogo por Artiq</span>
-                  <ChevronRight className="w-4 h-4" />
+                <div className="mt-6 flex items-center justify-between pt-2 border-t border-artiq-100/70">
+                  <div className="flex items-center text-xs font-bold text-artiq-700 gap-1">
+                    <span>Filtrar catálogo por Universo Artiq</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </div>
                 </div>
               </div>
 
               {/* BRAND CARD: BARISTICO */}
               <div 
                 id="mundo-baristico-card"
-                onClick={() => { setSelectedBrand('baristico'); setSelectedCategory('all'); }}
+                onClick={() => navigateToWorld('baristico')}
                 className={`relative overflow-hidden rounded-3xl border p-8 cursor-pointer transition-all duration-300 hover:shadow-xl ${
                   selectedBrand === 'baristico' ? 'block' : 'hidden md:block'
                 } ${
@@ -573,7 +755,7 @@ export default function App() {
                   />
                 </div>
 
-                <div className="flex justify-between items-start">
+                <div className="flex justify-between items-start flex-wrap gap-2">
                   <div className="bg-[#5b4638] text-[#f4f1e4] p-2.5 rounded-2xl shadow-md flex items-center justify-center w-12 h-12">
                     <img 
                       src="https://distritocafetero.com/wp-content/uploads/2026/08/Isotipo-baristico.1.svg" 
@@ -582,9 +764,23 @@ export default function App() {
                       referrerPolicy="no-referrer"
                     />
                   </div>
-                  <span className="text-[10px] font-bold font-mono tracking-widest text-[#5b4638] bg-[#e8e0d4] px-2.5 py-1 rounded-full uppercase border border-[#8b5e3c]/20">
-                    Mundo Barístico
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold tracking-widest text-[#5b4638] bg-[#e8e0d4] px-2.5 py-1 rounded-full uppercase border border-[#8b5e3c]/20">
+                      Mundo Barístico
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        copyDirectUrl('baristico', 'Universo Barístico');
+                      }}
+                      className="inline-flex items-center gap-1 text-[11px] font-bold text-[#5b4638] bg-white/95 hover:bg-[#e8e0d4] border border-[#8b5e3c]/30 px-2.5 py-1 rounded-xl transition-all shadow-2xs active:scale-95"
+                      title="Copiar URL directa de Universo Barístico"
+                    >
+                      <Copy className="w-3 h-3" />
+                      <span>Copiar URL</span>
+                    </button>
+                  </div>
                 </div>
 
                 <div className="mt-6">
@@ -630,9 +826,11 @@ export default function App() {
                   </span>
                 </div>
 
-                <div className="mt-6 flex items-center text-xs font-bold text-[#8b5e3c] gap-1">
-                  <span>Filtrar catálogo por Barístico</span>
-                  <ChevronRight className="w-4 h-4" />
+                <div className="mt-6 flex items-center justify-between pt-2 border-t border-[#8b5e3c]/20">
+                  <div className="flex items-center text-xs font-bold text-[#8b5e3c] gap-1">
+                    <span>Filtrar catálogo por Universo Barístico</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </div>
                 </div>
               </div>
 
@@ -648,45 +846,69 @@ export default function App() {
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                   <h3 className="text-sm font-bold text-gray-900 tracking-tight">Equipamiento Disponible</h3>
-                  <p className="text-xs text-gray-500">Selecciona una categoría para acotar tu búsqueda técnica.</p>
+                  <p className="text-xs text-gray-500">Selecciona tu Universo preferido o acota tu búsqueda por categoría técnica.</p>
                 </div>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 items-center">
                   <button
                     type="button"
-                    onClick={() => { setSelectedBrand('all'); setSelectedCategory('all'); }}
+                    onClick={() => navigateToWorld('all')}
                     className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                       selectedBrand === 'all' && selectedCategory === 'all'
-                        ? 'bg-gray-900 text-white'
+                        ? 'bg-gray-900 text-white shadow-sm'
                         : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
                     }`}
                   >
                     Todos los Mundos
                   </button>
 
-                  <button
-                    type="button"
-                    onClick={() => { setSelectedBrand('artiq'); setSelectedCategory('all'); }}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                      selectedBrand === 'artiq' && selectedCategory === 'all'
-                        ? 'bg-artiq-500 text-white'
-                        : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    Ver Todo Artiq
-                  </button>
+                  <div className="inline-flex items-center rounded-xl overflow-hidden border border-artiq-300 shadow-2xs">
+                    <button
+                      type="button"
+                      onClick={() => navigateToWorld('artiq')}
+                      className={`px-3 py-1.5 text-xs font-bold transition-all flex items-center gap-1.5 ${
+                        selectedBrand === 'artiq' && selectedCategory === 'all'
+                          ? 'bg-artiq-500 text-white'
+                          : 'bg-artiq-50 text-artiq-700 hover:bg-artiq-100'
+                      }`}
+                    >
+                      <Snowflake className="w-3.5 h-3.5" />
+                      <span>Ver Universo Artiq</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => copyDirectUrl('artiq', 'Universo Artiq')}
+                      className="px-2 py-1.5 bg-artiq-100 hover:bg-artiq-200 text-artiq-700 transition-colors border-l border-artiq-200 flex items-center gap-1 text-[11px] font-semibold"
+                      title="Copiar URL directa de Universo Artiq"
+                    >
+                      <Copy className="w-3 h-3" />
+                      <span className="hidden sm:inline">Copiar</span>
+                    </button>
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={() => { setSelectedBrand('baristico'); setSelectedCategory('all'); }}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                      selectedBrand === 'baristico' && selectedCategory === 'all'
-                        ? 'bg-[#5b4638] text-[#f4f1e4] ring-2 ring-[#8b5e3c]/40 shadow-sm'
-                        : 'bg-[#f4f1e4] text-[#5b4638] hover:bg-[#e8e0d4] border border-[#e8e0d4]'
-                    }`}
-                  >
-                    Ver Todo Barístico
-                  </button>
+                  <div className="inline-flex items-center rounded-xl overflow-hidden border border-[#8b5e3c]/40 shadow-2xs">
+                    <button
+                      type="button"
+                      onClick={() => navigateToWorld('baristico')}
+                      className={`px-3 py-1.5 text-xs font-bold transition-all flex items-center gap-1.5 ${
+                        selectedBrand === 'baristico' && selectedCategory === 'all'
+                          ? 'bg-[#5b4638] text-[#f4f1e4]'
+                          : 'bg-[#f4f1e4] text-[#5b4638] hover:bg-[#e8e0d4]'
+                      }`}
+                    >
+                      <Coffee className="w-3.5 h-3.5" />
+                      <span>Ver Universo Barístico</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => copyDirectUrl('baristico', 'Universo Barístico')}
+                      className="px-2 py-1.5 bg-[#e8e0d4] hover:bg-[#dfd4c5] text-[#5b4638] transition-colors border-l border-[#8b5e3c]/20 flex items-center gap-1 text-[11px] font-semibold"
+                      title="Copiar URL directa de Universo Barístico"
+                    >
+                      <Copy className="w-3 h-3" />
+                      <span className="hidden sm:inline">Copiar</span>
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -884,15 +1106,31 @@ export default function App() {
             <span>Conectando de forma eficiente la hostelería colombiana con distribuidores autorizados.</span>
           </div>
           <div className="flex justify-center gap-6 text-gray-500 font-medium">
-            <button type="button" onClick={() => { setCurrentView('catalog'); setSelectedBrand('artiq'); setSelectedCategory('all'); }} className="hover:text-sky-600 transition-colors">Maquinaria Artiq</button>
-            <button type="button" onClick={() => { setCurrentView('catalog'); setSelectedBrand('baristico'); setSelectedCategory('all'); }} className="hover:text-amber-800 transition-colors">Equipamiento Barístico</button>
-            <button type="button" onClick={() => setCurrentView('calculator')} className="hover:text-gray-800 transition-colors">Simulador Financiero</button>
+            <a href="#artiq" onClick={(e) => { e.preventDefault(); navigateToWorld('artiq'); }} className="hover:text-sky-600 transition-colors">
+              Maquinaria Artiq
+            </a>
+            <a href="#baristico" onClick={(e) => { e.preventDefault(); navigateToWorld('baristico'); }} className="hover:text-amber-800 transition-colors">
+              Equipamiento Barístico
+            </a>
+            <a href="#simulador" onClick={(e) => { e.preventDefault(); navigateToView('calculator'); }} className="hover:text-gray-800 transition-colors">
+              Simulador Financiero
+            </a>
           </div>
           <p className="text-[10px]">
             &copy; {new Date().getFullYear()} Horeca profesional. Todos los derechos reservados. Las estimaciones son orientativas y se calculan basándose en costes medios del sector en Colombia.
           </p>
         </div>
       </footer>
+
+      {/* Floating Toast Notification for Direct Link Sharing */}
+      {toastMessage && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-gray-950/95 text-white backdrop-blur-md px-5 py-3 rounded-2xl shadow-2xl border border-gray-800 flex items-center gap-3 animate-fadeIn text-xs sm:text-sm font-medium">
+          <div className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+            <Check className="w-3.5 h-3.5" />
+          </div>
+          <span>{toastMessage}</span>
+        </div>
+      )}
 
     </div>
   );
