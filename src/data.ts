@@ -37,7 +37,18 @@ export const PRODUCTS: Product[] = [
       { label: 'Botones Mecánicos', value: 'Bandeja antiderrames desmontable y disipador de aire optimizado' },
       { label: 'Garantía Oficial', value: '15 meses de garantía por defectos de fábrica' }
     ],
-    rating: 4.9
+    rating: 4.5,
+    gallery: [
+          "https://artiq.com.co/wp-content/uploads/2026/09/dispensador-de-aspas-3T-lateral-3-4.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/09/DISPONSADORA-DE-ASPAS-3T-TANQUES-PICADA.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/09/dispensador-de-aspas-3T-trasera-3-4.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/09/dispensador-de-aspas-3T-lateral-izquierdo.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/09/dispensador-de-aspas-3T-grifos.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/09/dispensador-de-aspas-3T-FRONTAL.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/09/dispensador-de-aspas-3T-close-up-tanques.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/09/dispensador-de-aspas-3T-close-up-grifo.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/09/dispensador-de-aspas-3T-botones.webp"
+    ]
   },
   {
     id: 'artiq-disp-2t-aspas',
@@ -75,7 +86,14 @@ export const PRODUCTS: Product[] = [
       { label: 'Acero Inox 303', value: 'Chasis robusto en acero inoxidable 303 con acabado gris y negro' },
       { label: 'Garantía Oficial', value: '15 meses de garantía directa por defectos de fábrica' }
     ],
-    rating: 4.9
+    rating: 4.4,
+    gallery: [
+          "https://artiq.com.co/wp-content/uploads/2025/12/MAQ0089-DISPENSADOR-DE-JUGO-CON-ASPAS-2-6-1-2.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/MAQ050403-001-DISPENSADOR-DE-JUGO-CON-ASPAS-2-3-1.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/MAQ050403-001-DISPENSADOR-DE-JUGO-CON-ASPAS-2-4-1.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/MAQ050403-001-DISPENSADOR-DE-JUGO-CON-ASPAS-2-5-1.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/MAQ050403-001-DISPENSADOR-DE-JUGO-CON-ASPAS-2-6-1.webp"
+    ]
   },
   {
     id: 'artiq-disp-3t-agitacion',
@@ -113,7 +131,13 @@ export const PRODUCTS: Product[] = [
       { label: 'Acero Inox 303', value: 'Chasis robusto en acero inoxidable 303 con bandeja antiderrames' },
       { label: 'Garantía Oficial', value: '15 meses de garantía directa por defectos de fábrica' }
     ],
-    rating: 4.9
+    rating: 4.6,
+    gallery: [
+          "https://artiq.com.co/wp-content/uploads/2025/12/BON6856.jpg",
+          "https://artiq.com.co/wp-content/uploads/2025/12/BON6872.jpg",
+          "https://artiq.com.co/wp-content/uploads/2025/12/BON6866.jpg",
+          "https://artiq.com.co/wp-content/uploads/2025/12/BON6876.jpg"
+    ]
   },
   {
     id: 'artiq-disp-2t-agitacion',
@@ -151,7 +175,13 @@ export const PRODUCTS: Product[] = [
       { label: 'Acero Inox 303', value: 'Chasis robusto en acero inoxidable 303 con bandeja antiderrames' },
       { label: 'Garantía Oficial', value: '15 meses de garantía directa por defectos de fábrica' }
     ],
-    rating: 4.9
+    rating: 4.3,
+    gallery: [
+          "https://artiq.com.co/wp-content/uploads/2025/12/BON6891.jpg",
+          "https://artiq.com.co/wp-content/uploads/2025/12/BON6897.jpg",
+          "https://artiq.com.co/wp-content/uploads/2025/12/BON6899.jpg",
+          "https://artiq.com.co/wp-content/uploads/2025/12/BON6894.jpg"
+    ]
   },
   {
     id: 'artiq-gran-2',
@@ -175,7 +205,18 @@ export const PRODUCTS: Product[] = [
       { label: 'Modo Noche', value: 'Bajo consumo de mantenimiento' },
       { label: 'Limpieza Rápida', value: 'Grifo desmontable sin herramientas' }
     ],
-    rating: 4.7
+    rating: 4.4,
+    gallery: [
+          "https://artiq.com.co/wp-content/uploads/2025/12/maquina-granizado-un-tanque-compacta.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/granizadora-1-tanque-profesional.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/mejor-granizadora-1-tanque-oferta.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/equipo-profesional-slush-1-tanque.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/granizadora-helados-un-vaso.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/maquina-hacer-granizado-un-tanque.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/productor-granizados-1x12-litros.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/equipo-granizado-pequeno-comprar.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/dispensador-slushie-sencillo-calidad.webp"
+    ]
   },
   {
     id: 'artiq-gran-3',
@@ -199,7 +240,16 @@ export const PRODUCTS: Product[] = [
       { label: 'Luces LED', value: 'Retroiluminación de alta visibilidad' },
       { label: 'Modo Noche', value: 'Mantiene frío con mínimo consumo' }
     ],
-    rating: 4.8
+    rating: 4.5,
+    gallery: [
+          "https://artiq.com.co/wp-content/uploads/2025/12/Granizadora-2-Tanques-Profesional.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/Granizadora-2-Cuerpos-Bar-Restaurante.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/Equipo-Granizado-Doble-Motor-Alto-Rendimiento.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/Bebidas-Frozen-Maquina-Granizado-Doble-Deposito.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/Comprar-Granizadora-Doble-Tanque.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/Maquina-Slush-Doble-Capacidad-Mejores-Precios.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/Dispensador-Granizados-2x24-Litros-Venta.webp"
+    ]
   },
   {
     id: 'artiq-ice-45',
@@ -223,7 +273,15 @@ export const PRODUCTS: Product[] = [
       { label: 'Panel Digital', value: 'Ajuste fino de consistencia' },
       { label: 'Luces LED', value: 'Retroiluminación LED integrada' }
     ],
-    rating: 4.9
+    rating: 4.6,
+    gallery: [
+          "https://artiq.com.co/wp-content/uploads/2025/12/Granizadora-3-Tanques-Profesional-36-Litros.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/Maquina-Slush-Triple-Capacidad-Venta-Comercial.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/Dispensador-Bebidas-Frozen-3x12-Litros-Industrial.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/Comprar-Granizadora-Doble-Funcion-3-Depositos.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/Equipo-Granizado-Alta-Demanda-3-Cuerpos-Acero-Inoxidable.webp",
+          "https://artiq.com.co/wp-content/uploads/2025/12/TRI1924.webp"
+    ]
   },
   {
     id: 'artiq-ice-455',
@@ -264,7 +322,24 @@ export const PRODUCTS: Product[] = [
       { label: 'Kit Completo Incluido', value: 'Filtro de agua, pala recolectora, mangueras y patas' },
       { label: 'Garantía Oficial', value: '15 meses de garantía directa por defectos de fábrica' }
     ],
-    rating: 4.9
+    rating: 4.5,
+    gallery: [
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-1.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-2.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-3.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-4.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-5.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-6.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-7.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-8.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-9.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-10.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-11.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-12.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-13.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-14.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-15.webp"
+    ]
   },
   {
     id: 'artiq-ice-110',
@@ -291,7 +366,12 @@ export const PRODUCTS: Product[] = [
       { label: 'Limpieza Automática', value: 'Ciclo sugerido cada 3 días' },
       { label: 'Panel de Control', value: 'Botones ON/OFF, indicadores y diagnósticos' }
     ],
-    rating: 4.9
+    rating: 4.4,
+    gallery: [
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-hielo-1500kg-escama.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-hielo-tipo-escama.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/hielo-escama.webp"
+    ]
   },
   {
     id: 'artiq-disp-4',
@@ -319,7 +399,23 @@ export const PRODUCTS: Product[] = [
       { label: 'Limpieza Automática', value: 'Ciclo sugerido cada 3 días' },
       { label: 'Materiales Premium', value: 'Acero inoxidable y plástico de alta resistencia' }
     ],
-    rating: 4.8
+    rating: 4.6,
+    gallery: [
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-tapa-cerrada.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-frontal-tapa-cerrada.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-frontal.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-lateral-tapa-abierta.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-1.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-tanque-3.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-tanque-1.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-piezas.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-pantalla-tapa-abierta.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-pala.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-Mangera.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-lateral-tapa-cerrada.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-accesorios.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-patas.webp"
+    ]
   },
   {
     id: 'artiq-disp-juice',
@@ -346,7 +442,21 @@ export const PRODUCTS: Product[] = [
       { label: 'Accesorios Incluidos', value: 'Pala recolectora, filtro de agua, mangueras y patas del contenedor' },
       { label: 'Panel de Control', value: 'Botones ON/OFF y ciclo de limpieza' }
     ],
-    rating: 4.8
+    rating: 4.3,
+    gallery: [
+          "https://artiq.com.co/wp-content/uploads/2026/05/hielera-800kg-perfil.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/accesorios-completos-maquina-hielo-800kg.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/maquina-hielo-tipo-escama-800kg.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/hielera-800kg-lateral.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/manguera-maquina-hielo-800kg.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/pala-hielera-800kg-.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/hielera-800kg-palas.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/hielera-800kg-pantalla-tapa-abierta.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/accesorio-hielera-800kg.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/almacenamiento-maquina-hielo-800kg.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/hielo-escama.webp",
+          "https://artiq.com.co/wp-content/uploads/2026/05/hielera-800kg-perfil-tapa-abierta.webp"
+    ]
   },
 
   // --- MUNDO BARÍSTICO (Café y molienda) ---
@@ -357,7 +467,7 @@ export const PRODUCTS: Product[] = [
     name: 'Máquina de Espresso Barista Máster',
     description: 'Máquina de espresso semi-profesional de alta precisión Bravetto Barista Máster (Referencia: MAQ090405-001). Equipada con bomba italiana ULKA de 19 bares con manómetro integrado, sistema de calentamiento por termobloque de 1600 W, portafiltro profesional de 58 mm y molino integrado con muelas de acero y 214° de ajuste. Incorpora gramera digital integrada, control de temperatura PID (90°C a 96°C), lanceta de vapor en 3 niveles, preinfusión y función de agua caliente integrada.',
     price: 2799900,
-    image: 'https://distritocafetero.com/wp-content/uploads/2026/09/Maquina-espresso-01.webp',
+    image: 'https://distritocafetero.com/wp-content/uploads/2026/04/Maquina-espresso-01.webp',
     specs: [
       'Referencia: MAQ090405-001',
       'Marca: Bravetto (Quality Origin)',
@@ -384,7 +494,13 @@ export const PRODUCTS: Product[] = [
       { label: 'Termobloque 1600 W', value: 'Rápida respuesta térmica, vapor en 3 niveles y preinfusión de 90s' },
       { label: 'Tanque 2.8L + Ducheta', value: 'Gran autonomía de agua con salida dedicada para infusiones y té' }
     ],
-    rating: 4.9
+    rating: 4.6,
+    gallery: [
+      'https://distritocafetero.com/wp-content/uploads/2026/04/Maquina-espresso-02.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/04/Maquina-espresso-03.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/04/Maquina-espresso-01.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/04/espresso-cafe.webp'
+    ]
   },
   {
     id: 'bar-cafe-2g',
@@ -393,7 +509,7 @@ export const PRODUCTS: Product[] = [
     name: 'Bravetto Máquina Espresso Automática',
     description: 'Máquina espresso superautomática premium de alta precisión (Referencia: MAQ051322-001 - Color Negro) de la línea Bravetto Café & Bar. Equipada con pantalla HD táctil de 10.1 pulgadas para preparar automáticamente hasta 16 tipos de de bebidas, molino integrado de muelas cónicas de acero con 7 niveles de molienda y bomba Ulka Italiana de 19 bares.',
     price: 5999900,
-    image: 'https://distritocafetero.com/wp-content/uploads/2026/07/Caracteristica-empaque-1.webp',
+    image: 'https://distritocafetero.com/wp-content/uploads/2026/06/maquina-espresso-bravetto-05.webp',
     specs: [
       'Preparaciones: Hasta 16 tipos de bebidas de café y leche',
       'Pantalla: HD táctil de 10.1 pulgadas integrada',
@@ -411,7 +527,15 @@ export const PRODUCTS: Product[] = [
       { label: 'Personalización Completa', value: 'Ajuste de intensidad del café (3 niveles), leche, agua y vapor' },
       { label: 'Mantenimiento Automatizado', value: 'Función de autolimpieza y descalcificación automática' }
     ],
-    rating: 4.9
+    rating: 4.5,
+    gallery: [
+      'https://distritocafetero.com/wp-content/uploads/2026/06/maquina-espresso-bravetto-05.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/06/maquina-espresso-bravetto-06.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/06/maquina-espresso-bravetto-04.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/06/maquina-espresso-bravetto-03.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/06/maquina-espresso-bravetto-02.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/06/maquina-espresso-bravetto-01.webp'
+    ]
   },
   {
     id: 'bar-cafe-3g',
@@ -420,7 +544,7 @@ export const PRODUCTS: Product[] = [
     name: 'Carimali Nimble 2 GR',
     description: 'Máquina espresso profesional tradicional de dos grupos (2 GR) en color negro, ideal para cafeterías con ritmo de servicio medio-alto. Combina un diseño exclusivo, elegante y compacto con una caldera de cobre de 11 litros con intercambiadores de calor para extracción continua de espresso. Hecha por Carimali, marca italiana premium con más de 100 años de trayectoria.',
     price: 13999999,
-    image: 'https://distritocafetero.com/wp-content/uploads/2026/07/CarimaliNegra-02.webp',
+    image: 'https://distritocafetero.com/wp-content/uploads/2026/03/CarimaliNegra-02.webp',
     specs: [
       'Grupos de erogación: 2 grupos de café',
       'Capacidad de caldera: 11 Litros',
@@ -441,7 +565,16 @@ export const PRODUCTS: Product[] = [
       { label: 'Diseño Exclusivo Negro', value: 'Acabado elegante en color negro que aporta un look sofisticado a cualquier barra.' },
       { label: 'Adaptabilidad de Altura', value: 'Incluye rejillas especiales para adaptar vasos y tazas de diferentes tamaños.' }
     ],
-    rating: 4.9
+    rating: 4.6,
+    gallery: [
+      'https://distritocafetero.com/wp-content/uploads/2026/03/CarimaliNegra-02.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/cafetera-espresso-la-carimali-nimble-nueva-italiana-23.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/maquina-espresso-la-carimali-blanca-2-grupos.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/maquina-espresso-la-carimali-2-grupos-pantalla-led.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/maquina-espresso-la-carimali-2-grupos-negra-italiana.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/maquina-espresso-la-carimali-2-grupos-negra-italiana-cobre.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/maquina-espresso-la-carimali-2-grupos-negra-italiana-22.webp'
+    ]
   },
   {
     id: 'bar-cafe-compact',
@@ -472,33 +605,10 @@ export const PRODUCTS: Product[] = [
       { label: 'Estética Minimalista y Vanguardista', value: 'Estructura compacta en acero inoxidable con acabados en negro, blanco o metal pulido.' },
       { label: 'Accesorios Profesionales Incluidos', value: 'Viene equipada con 2 portafiltros profesionales y tamper oficial Bellezza de acero inoxidable.' }
     ],
-    rating: 4.8
-  },
-  {
-    id: 'bar-grind-64',
-    brand: 'eureka',
-    category: 'molino',
-    name: 'Eureka Helios 65',
-    description: 'Molino de café profesional italiano de alta gama diseñado para un rendimiento excepcional en entornos de alta demanda. Equipado con muelas planas de 65 mm de acero inoxidable, panel táctil interactivo, dosificación programable electrónica y regulación micrométrica continua.',
-    price: 4770144,
-    image: 'https://distritocafetero.com/wp-content/uploads/2026/07/molino-helios-65-1.webp',
-    specs: [
-      'Dimensiones (Al x An x Pr): 60 x 22 x 25 cm',
-      'Peso y Potencia: 12 kg | 280 W',
-      'Fuente de energía: 110 V / 60 Hz',
-      'Muelas: Planas de 65 mm en acero inoxidable',
-      'Capacidad de la tolva: 1.2 kg',
-      'Productividad: 3.5 gr / 5 seg',
-      'Pantalla: Control táctil interactivo',
-      'Programable: Sí'
-    ],
-    features: [
-      { label: 'Muelas de 65 mm', value: 'Muelas planas de acero inoxidable de gran precisión para un flujo constante.' },
-      { label: 'Pantalla Táctil Digital', value: 'Panel táctil intuitivo con programación rápida para dosis simple, doble y continua.' },
-      { label: 'Gran Capacidad de Tolva', value: 'Tolva de 1.2 kg que asegura continuidad en barras de café de alto tráfico.' },
-      { label: 'Regulación Micrométrica', value: 'Control fino continuo patentado para ajuste exacto del punto de molienda.' }
-    ],
-    rating: 4.9
+    rating: 4.4,
+    gallery: [
+      'https://distritocafetero.com/wp-content/uploads/2026/07/Belleza-bellona-negro.webp'
+    ]
   },
   {
     id: 'bar-grind-silent',
@@ -507,7 +617,7 @@ export const PRODUCTS: Product[] = [
     name: 'Eureka Mignon Specialità',
     description: 'Molino de café italiano de alta precisión con tecnología silenciosa y panel táctil. Equipado con muelas planas de 55 mm de acero inoxidable, baja retención de café, regulación micrométrica continua y dosis programables.',
     price: 3800000,
-    image: 'https://distritocafetero.com/wp-content/uploads/2026/07/molino-mignon-specialita.webp',
+    image: 'https://distritocafetero.com/wp-content/uploads/2026/03/MolinoSpecialita-1.webp',
     specs: [
       'Dimensiones (Al x An x Pr): 350 x 120 x 180 mm',
       'Peso y Potencia: 5.6 kg | 310 W',
@@ -525,7 +635,12 @@ export const PRODUCTS: Product[] = [
       { label: 'Regulación Micrométrica', value: 'Ajuste continuo micrométrico patentado por Eureka.' },
       { label: 'Pantalla Táctil Digital', value: 'Programación intuitiva para dosis simples y dobles.' }
     ],
-    rating: 4.9
+    rating: 4.4,
+    gallery: [
+      'https://distritocafetero.com/wp-content/uploads/2026/03/MolinoSpecialita-1.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/molino-mignon-3.jpg',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/molino-mignon-2.jpg'
+    ]
   },
   {
     id: 'bar-grind-onix',
@@ -534,7 +649,7 @@ export const PRODUCTS: Product[] = [
     name: 'Barístico Molino Onix Pro',
     description: 'Molino de café profesional Onix Pro de diseño compacto y alta precisión. Equipado con muelas cónicas de 58 mm de acero inoxidable, ajuste de molienda de 30 a 60 niveles y control de tiempo personalizable de 0 a 50 segundos. Diseñado con doble protección contra sobrecargas y sistema antiestático que evita la dispersión del café molido.',
     price: 549900,
-    image: 'https://distritocafetero.com/wp-content/uploads/2026/07/3_MOLINO_ONYXPRO_MAQ090805-001.webp',
+    image: 'https://distritocafetero.com/wp-content/uploads/2026/03/molino-cafe-onyx.webp',
     specs: [
       'Dimensiones (An x Al x Pr): 149 x 341.5 x 212 mm',
       'Peso y Potencia: 2.6 kg | 150 W',
@@ -551,7 +666,116 @@ export const PRODUCTS: Product[] = [
       { label: 'Operación Silenciosa', value: 'Molienda optimizada acústicamente con menos de 83 DBA.' },
       { label: 'Tecnología Anti-estática', value: 'Sistema de reducción estática que evita que el café molido se disperse.' }
     ],
-    rating: 4.8
+    rating: 4.3,
+    gallery: [
+      'https://distritocafetero.com/wp-content/uploads/2026/03/molino-cafe-onyx.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/molino-cafe-onyx-1.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/Molino-onyx-pro-1.webp'
+    ]
+  },
+  {
+    id: 'bar-eureka-drogheria',
+    brand: 'eureka',
+    category: 'molino',
+    name: 'Molino Eureka Drogheria Profesional',
+    description: 'Molino profesional para tienda y barra de café de especialidad Eureka Drogheria con fresas planas de acero templado de 65 mm. Cuenta con regulación micrométrica continua sin etapas, sistema Blow Up (cero retención), potente motor de tracción directa de 450 W y sistema de bloqueo de bolsas para dispensación comercial continua.',
+    price: 7569900,
+    image: 'https://distritocafetero.com/wp-content/uploads/2026/03/Droghera-molino-1.webp',
+    specs: [
+      'Tipo: Molino profesional comercial para bolsa y barista',
+      'Fresas: Planas de 65 mm en acero templado',
+      'Motor: Tracción directa de 450 W / 1370 RPM',
+      'Alimentación: 110 V / 60 Hz',
+      'Capacidad de tolva: 1.4 Kg con sistema Blow Up',
+      'Productividad: 3 - 4 g/s (Espresso) y 4 - 5 g/s (Brew)',
+      'Regulación: Micrométrica continua sin etapas (Stepless)',
+      'Dial: King-size de alta precisión',
+      'Dimensiones (Al x An x Pr): 645 x 184 x 267 mm',
+      'Peso neto: 14.2 Kg',
+      'Estructura: Cuerpo y base en fundición de aluminio'
+    ],
+    features: [
+      { label: 'Fresas Planas 65 mm', value: 'Acero templado de alta resistencia con molienda rápida sin fricción térmica' },
+      { label: 'Sistema Blow Up', value: 'Elimina residuos con soplo de aire garantizando cero retención y frescura' },
+      { label: 'Tolva Gran Capacidad 1.4 Kg', value: 'Ideal para empaquetado en grano, venta en tienda o alto volumen en barra' },
+      { label: 'Regulación Stepless', value: 'Ajuste micrométrico sin etapas patentado por Eureka para espresso o métodos' },
+      { label: 'Soporte Sujeta-Bolsas', value: 'Pinza metálica ergonómica para llenado directo de bolsas de café' }
+    ],
+    rating: 4.6,
+    gallery: [
+      'https://distritocafetero.com/wp-content/uploads/2026/03/Droghera-molino-1.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/Drogheria-molino-1.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/Drogheria-Pomello-1.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/molino-Drogheria-1.webp'
+    ]
+  },
+  {
+    id: 'bar-eureka-mignon-filtro',
+    brand: 'eureka',
+    category: 'molino',
+    name: 'Molino Mignon Filtro 50MM Eureka',
+    description: 'Molino especializado para métodos de filtrado (V60, Chemex, Aeropress, Prensa Francesa) Eureka Mignon Filtro. Equipado con muelas planas de 50 mm en acero inoxidable, regulación micrométrica continua patentada, motor de 310 W a 1350 RPM y diseño compacto ultrarobusto.',
+    price: 1899900,
+    image: 'https://distritocafetero.com/wp-content/uploads/2026/03/Mignon-Filtro-1-1.webp',
+    specs: [
+      'Enfoque: Molienda optimizada para filtrados y métodos de goteo',
+      'Muelas: Planas de 50 mm en acero inoxidable',
+      'Potencia y RPM: 310 W / 1350 RPM',
+      'Alimentación: 110 V / 60 Hz',
+      'Productividad: 1.5 - 2.12 g/s',
+      'Capacidad de tolva: 150 gramos',
+      'Regulación: Micrométrica continua patentada Eureka',
+      'Dimensiones (Al x An x Pr): 350 x 120 x 180 mm',
+      'Peso: 5.6 Kg',
+      'Acabado: Negro mate elegante'
+    ],
+    features: [
+      { label: 'Especializado en Filtrados', value: 'Geometría de muelas optimizada para V60, Chemex, Aeropress y batch brew' },
+      { label: 'Muelas Inox 50 mm', value: 'Distribución granulométrica limpia con reducción notable de finos' },
+      { label: 'Ajuste Micrométrico', value: 'Control de punto exacto sin saltos para calibrar cada receta' },
+      { label: 'Diseño Compacto Mignon', value: 'Ocupa mínimo espacio en barra con chasis de alta durabilidad' }
+    ],
+    rating: 4.5,
+    gallery: [
+      'https://distritocafetero.com/wp-content/uploads/2026/03/Mignon-Filtro-1-1.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/Mignon-filtro-3-4-1-1.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/Mignon-Filtro-4-1.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/Mignon-Filtro-3-2.webp',
+      'https://distritocafetero.com/wp-content/uploads/2026/03/Mignon-Filtro-3-1-1.webp'
+    ]
+  },
+  {
+    id: 'bar-eureka-mignon-zero',
+    brand: 'eureka',
+    category: 'molino',
+    name: 'Molino Mignon Zero Eureka',
+    description: 'Molinillo de café monodosis (Single Dose) de alta gama Eureka Mignon Zero. Diseñado para ofrecer cero retención con el kit Mignon Single Dose: tolva con mecanismo Blow Up Cleaning, taza dosificadora (Dosing Cup) y horquilla ajustable. Cuenta con fresas planas de 55 mm de acero templado, tecnología Silent y sistema ACE anti-estática.',
+    price: 3599900,
+    image: 'https://distritocafetero.com/wp-content/uploads/2026/03/74-3.webp',
+    specs: [
+      'Concepto: Single Dose (Monodosis Cero Retención)',
+      'Fresas: Planas de 55 mm en acero templado',
+      'Sistema de Limpieza: Blow Up Cleaning patentado',
+      'Tecnología Silent: Aislamiento acústico de molienda',
+      'Sistema ACE: Anti-grumos y eliminación de carga electrostática',
+      'Potencia y RPM: 320 W / 1350 RPM',
+      'Capacidad tolva monodosis: 45 gramos',
+      'Productividad: 1.8 - 2.5 g/s (Espresso) / 2.5 - 3.5 g/s (Brew)',
+      'Horquilla: Ajustable "manos libres" con Dosing Cup incluida',
+      'Dimensiones (Al x An x Pr): 345 x 120 x 140 mm',
+      'Peso: 5.6 Kg'
+    ],
+    features: [
+      { label: 'Filosofía Single Dose', value: 'Muele dosis individuales al momento con máxima frescura y cero desperdicio' },
+      { label: 'Mecanismo Blow Up', value: 'Expulsa todo residuo remanente con un soplo para pureza total entre cafés' },
+      { label: 'Tecnología Silent', value: 'Molienda ultrasilenciosa ideal para espacios cerrados y hogares exigentes' },
+      { label: 'Fresas Templadas 55 mm', value: 'Rendimiento versátil para espresso de campeonato o extracciones filtradas' },
+      { label: 'Dosing Cup Incluida', value: 'Vaso dosificador de acero inoxidable compatible con portafiltros de 58mm' }
+    ],
+    rating: 4.5,
+    gallery: [
+      'https://distritocafetero.com/wp-content/uploads/2026/03/74-3.webp'
+    ]
   }
 ];
 

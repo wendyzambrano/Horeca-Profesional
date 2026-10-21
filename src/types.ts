@@ -10,6 +10,7 @@ export interface Product {
   features: { label: string; value: string }[];
   rating: number;
   image?: string;
+  gallery?: string[];
 }
 
 export interface RequestedProductItem {

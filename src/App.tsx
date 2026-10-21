@@ -203,37 +203,18 @@ export default function App() {
         setSelectedBrand('artiq');
         setSelectedCategory('all');
         document.title = 'Universo Artiq | Universo Horeca';
-        if (isInitial) {
-          setTimeout(() => {
-            const el = document.getElementById('mundo-artiq-card') || document.getElementById('catalog-products-grid') || document.getElementById('mundos-horeca');
-            if (el) {
-              const headerOffset = 115;
-              const elementPosition = el.getBoundingClientRect().top;
-              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-              window.scrollTo({ top: Math.max(0, offsetPosition), behavior: 'smooth' });
-            }
-          }, 200);
-        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (['baristico', 'mundo-baristico', 'universo-baristico'].includes(rawHash)) {
         setCurrentView('catalog');
         setSelectedBrand('baristico');
         setSelectedCategory('all');
         document.title = 'Universo Barístico | Universo Horeca';
-        if (isInitial) {
-          setTimeout(() => {
-            const el = document.getElementById('mundo-baristico-card') || document.getElementById('catalog-products-grid') || document.getElementById('mundos-horeca');
-            if (el) {
-              const headerOffset = 115;
-              const elementPosition = el.getBoundingClientRect().top;
-              const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-              window.scrollTo({ top: Math.max(0, offsetPosition), behavior: 'smooth' });
-            }
-          }, 200);
-        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (['catalogo', 'todos', 'catalog', 'equipos'].includes(rawHash)) {
         setCurrentView('catalog');
         setSelectedBrand('all');
         document.title = 'Universo Horeca | Catálogo Profesional';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else if (['calculadora', 'simulador', 'calculator', 'roi'].includes(rawHash)) {
         setCurrentView('calculator');
         document.title = 'Simulador de Rentabilidad | Universo Horeca';
@@ -269,26 +250,7 @@ export default function App() {
     }
 
     if (shouldScroll) {
-      setTimeout(() => {
-        let targetElement: HTMLElement | null = null;
-        if (brand === 'artiq') {
-          targetElement = document.getElementById('mundo-artiq-card') || document.getElementById('mundos-horeca') || document.getElementById('mobile-catalog-sliders');
-        } else if (brand === 'baristico') {
-          targetElement = document.getElementById('mundo-baristico-card') || document.getElementById('mundos-horeca') || document.getElementById('mobile-catalog-sliders');
-        } else {
-          targetElement = document.getElementById('equipamiento-disponible') || document.getElementById('mobile-catalog-sliders');
-        }
-
-        if (targetElement) {
-          const headerOffset = 115;
-          const elementPosition = targetElement.getBoundingClientRect().top;
-          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-          window.scrollTo({
-            top: Math.max(0, offsetPosition),
-            behavior: 'smooth'
-          });
-        }
-      }, 60);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -577,50 +539,82 @@ export default function App() {
         </div>
       </div>
 
-      {/* FULL-SCREEN HERO BANNER */}
+      {/* HERO BANNER - Exact height of the image */}
       {currentView === 'catalog' && (
-        <section className="relative w-full h-[calc(100vh-4rem)] min-h-[580px] flex flex-col justify-center items-center text-center overflow-hidden bg-[#ece8e2] px-4 sm:px-6 lg:px-8 py-10">
-          {/* Background Image: Full screen cover */}
-          <img 
-            src="https://artiq.com.co/wp-content/uploads/2026/10/horeca-profesional-dos-mundos-mh-1.webp" 
-            alt="Horeca Profesional - Maquinaria y Equipamiento Hostelero" 
-            className="absolute inset-0 w-full h-full object-cover object-center"
-            referrerPolicy="no-referrer"
-          />
-          
-          {/* Subtle overlay for optimal contrast and readability */}
-          <div className="absolute inset-0 bg-white/40 md:bg-white/20 backdrop-blur-[0.5px] pointer-events-none" />
+        <section className="relative w-full overflow-hidden bg-[#ece8e2]">
+          {/* Image defining the exact natural height */}
+          <picture className="block w-full">
+            {/* Mobile (max-width: 767px): Banner changes apply ONLY to mobile */}
+            <source
+              media="(max-width: 767px)"
+              srcSet={
+                selectedBrand === 'artiq'
+                  ? "https://artiq.com.co/wp-content/uploads/2026/10/Mundo-artiq-1.webp"
+                  : selectedBrand === 'baristico'
+                    ? "https://artiq.com.co/wp-content/uploads/2026/10/Mundo-baristico-2-1.webp"
+                    : "https://artiq.com.co/wp-content/uploads/2026/10/horeca-profesional-dos-mundos-cl-1.webp"
+              }
+            />
+            {/* Desktop (min-width: 768px) */}
+            <source
+              media="(min-width: 768px)"
+              srcSet={
+                selectedBrand === 'artiq'
+                  ? "https://artiq.com.co/wp-content/uploads/2026/10/dosmundos-02-1.webp"
+                  : selectedBrand === 'baristico'
+                    ? "https://artiq.com.co/wp-content/uploads/2026/10/dosmundos-01-1.webp"
+                    : "https://artiq.com.co/wp-content/uploads/2026/10/horeca-profesional-dos-mundos-mh-1.webp"
+              }
+            />
+            <img 
+              src={
+                selectedBrand === 'artiq'
+                  ? "https://artiq.com.co/wp-content/uploads/2026/10/dosmundos-02-1.webp"
+                  : selectedBrand === 'baristico'
+                    ? "https://artiq.com.co/wp-content/uploads/2026/10/dosmundos-01-1.webp"
+                    : "https://artiq.com.co/wp-content/uploads/2026/10/horeca-profesional-dos-mundos-mh-1.webp"
+              } 
+              alt={
+                selectedBrand === 'artiq'
+                  ? "Mundo Artiq - Refrigeración Profesional"
+                  : selectedBrand === 'baristico'
+                    ? "Mundo Barístico - Ingeniería para Café"
+                    : "Horeca Profesional - Maquinaria y Equipamiento Hostelero"
+              } 
+              className="w-full h-auto block"
+              referrerPolicy="no-referrer"
+            />
+          </picture>
 
-          {/* Text of the First Section on Top of Banner */}
-          <div className="relative z-10 max-w-5xl mx-auto space-y-3 sm:space-y-4 flex flex-col items-center animate-fadeIn px-4 text-center mt-20 sm:mt-28 md:mt-36 lg:mt-44 mb-6 sm:mb-10">
-            {/* Main Headline */}
-            <h1 className="text-xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-black text-[#221813] tracking-tight uppercase leading-tight whitespace-nowrap drop-shadow-xs">
-              DOS MUNDOS, UNA EXPERIENCIA.
-            </h1>
+          {/* Text of the First Section on Top of Banner:
+              Desktop and Mobile: Shown when all/general brand is selected.
+              Hidden when selectedBrand === 'artiq' or selectedBrand === 'baristico' (as they have dedicated graphic titles and machinery).
+          */}
+          <div className={`absolute inset-0 z-10 flex-col items-center justify-center text-center animate-fadeIn px-2 sm:px-4 pointer-events-none ${
+            selectedBrand === 'artiq' || selectedBrand === 'baristico' ? 'hidden' : 'flex'
+          }`}>
+            <div className="max-w-5xl mx-auto space-y-2 sm:space-y-2.5 flex flex-col items-center px-2">
+              {/* Main Headline (split in two lines, second line larger) */}
+              <h1 className="flex flex-col items-center text-[#221813] uppercase drop-shadow-sm text-center leading-tight">
+                <span className="text-lg min-[360px]:text-xl min-[414px]:text-2xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight whitespace-nowrap">
+                  DOS MUNDOS,
+                </span>
+                <span className="text-2xl min-[360px]:text-3xl min-[414px]:text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tight whitespace-nowrap mt-1">
+                  UNA EXPERIENCIA.
+                </span>
+              </h1>
 
-            {/* Subtitle with matching typographic contrast */}
-            <div className="text-xs sm:text-sm md:text-base lg:text-xl text-[#221813] uppercase tracking-wider leading-relaxed font-medium max-w-3xl">
-              <p>
-                NUEVO DESTINO PARA NEGOCIOS <span className="font-black">GASTRONÓMICOS,</span>
-              </p>
-              <p>
-                <span className="font-black">DE CAFÉ Y REFRIGERACIÓN</span> PROFESIONAL.
-              </p>
+              {/* Subtitle with matching typographic contrast */}
+              <div className="text-[11px] min-[360px]:text-xs min-[414px]:text-sm sm:text-xs md:text-base lg:text-xl text-[#221813] uppercase tracking-wider leading-relaxed font-semibold max-w-3xl drop-shadow-xs">
+                <p>
+                  NUEVO DESTINO PARA NEGOCIOS <span className="font-black">GASTRONÓMICOS,</span>
+                </p>
+                <p>
+                  <span className="font-black">DE CAFÉ Y REFRIGERACIÓN</span> PROFESIONAL.
+                </p>
+              </div>
             </div>
           </div>
-
-          {/* Scroll Down Indicator */}
-          <button
-            type="button"
-            onClick={() => {
-              document.getElementById('mundos-horeca')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            aria-label="Desplazarse a mundos horeca"
-            className="absolute bottom-4 sm:bottom-6 z-10 text-gray-700 hover:text-gray-950 transition-colors flex flex-col items-center gap-1 animate-bounce"
-          >
-            <span className="text-[10px] uppercase font-bold tracking-widest text-gray-600">Descubre Más</span>
-            <ChevronDown className="w-5 h-5 text-gray-800" />
-          </button>
         </section>
       )}
 
@@ -983,7 +977,7 @@ export default function App() {
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-gray-400">
                   <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                  <span className="font-mono text-[11px]">Catálogo Oficial</span>
+                  <span className="text-[11px] font-medium text-gray-500">Catálogo Oficial</span>
                 </div>
               </div>
 

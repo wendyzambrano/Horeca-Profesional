@@ -9,7 +9,8 @@ import {
   Eye, 
   Droplet, 
   HardDrive,
-  Sparkles
+  Sparkles,
+  Images
 } from 'lucide-react';
 import ProductDetailModal from './ProductDetailModal';
 
@@ -95,7 +96,7 @@ export default function ProductCard({
 
           {/* Category Chip at top-right */}
           <div className="absolute top-2 right-2 z-10">
-            <span className={`text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-md font-mono ${
+            <span className={`text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded-md ${
               isArtiq ? 'bg-artiq-50 text-artiq-700 border border-artiq-200/60' : 'bg-[#f4f1e4] text-[#5b4638] border border-[#e8e0d4]'
             }`}>
               {getCategoryLabel(product.category)}
@@ -117,7 +118,7 @@ export default function ProductCard({
               ) : (
                 <Coffee className="w-10 h-10 sm:w-12 sm:h-12 text-[#8b5e3c]" />
               )}
-              <span className="text-[10px] font-mono text-gray-500 mt-1 font-bold">
+              <span className="text-[10px] text-gray-500 mt-1 font-semibold">
                 {product.name}
               </span>
             </div>
@@ -129,6 +130,14 @@ export default function ProductCard({
               <Eye className="w-3 h-3" /> Clic para ver ficha completa
             </span>
           </div>
+
+          {/* Gallery Photo Count Badge at bottom-left */}
+          {product.gallery && product.gallery.length > 1 && (
+            <div className="absolute bottom-2 left-2 z-10 bg-black/65 backdrop-blur-xs text-white text-[9px] font-bold px-1.5 py-0.5 rounded-md flex items-center gap-1 shadow-xs pointer-events-none">
+              <Images className="w-2.5 h-2.5 text-white/90" />
+              <span>{product.gallery.length} fotos</span>
+            </div>
+          )}
         </div>
 
         {/* Middle: Product Content (Name & Price) */}
@@ -139,40 +148,26 @@ export default function ProductCard({
               <span className="text-gray-600 font-medium text-[10px] sm:text-xs">
                 {product.rating.toFixed(1)}
               </span>
-              <span className="text-gray-300">•</span>
-              <span className="text-gray-400 font-mono text-[9px] sm:text-[10px]">
-                Ref: {product.id.slice(0, 10)}
-              </span>
             </div>
 
-            {/* Product Name (Clean 2-line clamp) */}
-            <h3 className={`text-xs sm:text-sm font-bold text-gray-900 leading-snug line-clamp-2 min-h-[2.5rem] transition-colors ${
+            {/* Product Name (Full title displayed completely) */}
+            <h3 className={`text-xs sm:text-sm font-bold text-gray-900 leading-snug transition-colors ${
               isArtiq ? 'group-hover:text-artiq-800' : 'group-hover:text-[#5b4638]'
             }`}>
               {product.name}
             </h3>
-
-            {/* Main Highlight Feature */}
-            {product.features && product.features[0] && (
-              <p className="text-[10px] sm:text-[11px] text-gray-500 line-clamp-1 mt-1 font-medium">
-                <span className="text-gray-400">{product.features[0].label}:</span> {product.features[0].value}
-              </p>
-            )}
           </div>
 
           {/* Price & Action Buttons */}
           <div className="mt-3 pt-2.5 border-t border-gray-100">
-            <div className="mb-2.5">
-              <span className="text-[9px] sm:text-[10px] uppercase font-bold text-gray-400 font-mono block">
-                Precio Sugerido
-              </span>
+            <div className="mb-2">
               <div className="flex items-baseline">
                 <span className={`text-sm sm:text-lg font-black tracking-tight ${
                   isArtiq ? 'text-artiq-600' : 'text-[#8b5e3c]'
                 }`}>
                   ${product.price.toLocaleString('es-CO')}
                 </span>
-                <span className="text-[9px] sm:text-[10px] text-gray-400 ml-1 font-mono">COP</span>
+                <span className="text-[10px] sm:text-xs text-gray-400 font-semibold ml-1">COP</span>
               </div>
             </div>
 
