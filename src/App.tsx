@@ -5,6 +5,7 @@ import ProductCard from './components/ProductCard';
 import ProductDetailModal from './components/ProductDetailModal';
 import ProfitabilityCalculator from './components/ProfitabilityCalculator';
 import QuoteBuilder from './components/QuoteBuilder';
+import WorldCategoryBar from './components/WorldCategoryBar';
 import { 
   Building2, ShoppingCart, Calculator, 
   Sparkles, Snowflake, Coffee, Layers, ChevronRight, HelpCircle, Info, CheckCircle, ChevronDown,
@@ -626,7 +627,17 @@ export default function App() {
           <div className="space-y-10 animate-fadeIn">
 
             {/* DUAL MUNDOS PANEL (Split visual selector) */}
-            <div className={`grid-cols-1 md:grid-cols-2 gap-6 pt-2 ${selectedBrand === 'all' ? 'hidden md:grid' : 'grid'}`} id="mundos-horeca">
+            {selectedBrand !== 'all' ? (
+              <WorldCategoryBar
+                world={selectedBrand}
+                selectedCategory={selectedCategory}
+                onSelectCategory={(category) => {
+                  setSelectedCategory(category);
+                  document.getElementById('mobile-catalog-sliders')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              />
+            ) : (
+            <div className={`grid-cols-1 md:grid-cols-2 gap-6 pt-2 hidden md:grid`} id="mundos-horeca">
               
               {/* BRAND CARD: ARTIQ */}
               <div 
@@ -829,13 +840,12 @@ export default function App() {
               </div>
 
             </div>
+            )}
 
             {/* FILTER BUTTONS ROW */}
             <div 
               id="equipamiento-disponible" 
-              className={`bg-white border border-gray-100 p-5 rounded-2xl shadow-sm space-y-4 ${
-                selectedBrand !== 'all' ? 'hidden md:block' : 'block'
-              }`}
+              className={`bg-white border border-gray-100 p-5 rounded-2xl shadow-sm space-y-4 hidden md:block`}
             >
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
