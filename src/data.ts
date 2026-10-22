@@ -494,6 +494,7 @@ export const PRODUCTS: Product[] = [
       { label: 'Termobloque 1600 W', value: 'Rápida respuesta térmica, vapor en 3 niveles y preinfusión de 90s' },
       { label: 'Tanque 2.8L + Ducheta', value: 'Gran autonomía de agua con salida dedicada para infusiones y té' }
     ],
+    dailyCapacity: { comfortMin: 20, comfortMax: 40, max: 60, idealFor: 'Hogar, oficina pequeña o emprendimiento muy inicial' },
     rating: 4.6,
     gallery: [
       'https://distritocafetero.com/wp-content/uploads/2026/04/Maquina-espresso-02.webp',
@@ -527,6 +528,7 @@ export const PRODUCTS: Product[] = [
       { label: 'Personalización Completa', value: 'Ajuste de intensidad del café (3 niveles), leche, agua y vapor' },
       { label: 'Mantenimiento Automatizado', value: 'Función de autolimpieza y descalcificación automática' }
     ],
+    dailyCapacity: { comfortMin: 60, comfortMax: 100, max: 150, idealFor: 'Oficina, restaurante o punto de bajo/medio flujo (máximo conectada a red de agua)' },
     rating: 4.5,
     gallery: [
       'https://distritocafetero.com/wp-content/uploads/2026/06/maquina-espresso-bravetto-05.webp',
@@ -565,6 +567,7 @@ export const PRODUCTS: Product[] = [
       { label: 'Diseño Exclusivo Negro', value: 'Acabado elegante en color negro que aporta un look sofisticado a cualquier barra.' },
       { label: 'Adaptabilidad de Altura', value: 'Incluye rejillas especiales para adaptar vasos y tazas de diferentes tamaños.' }
     ],
+    dailyCapacity: { comfortMin: 200, comfortMax: 350, max: 400, idealFor: 'Cafetería mediana o de alto flujo' },
     rating: 4.6,
     gallery: [
       'https://distritocafetero.com/wp-content/uploads/2026/03/CarimaliNegra-02.webp',

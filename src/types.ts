@@ -11,6 +11,15 @@ export interface Product {
   rating: number;
   image?: string;
   gallery?: string[];
+  /** Capacidad diaria recomendada (cafeteras). La usa el simulador para limitar las tazas/día. */
+  dailyCapacity?: DailyCapacity;
+}
+
+export interface DailyCapacity {
+  comfortMin: number; // uso cómodo, desde
+  comfortMax: number; // uso cómodo, hasta
+  max: number;        // máximo exigiéndola
+  idealFor?: string;  // para qué tipo de negocio es ideal
 }
 
 export interface RequestedProductItem {

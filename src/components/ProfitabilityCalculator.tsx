@@ -36,7 +36,9 @@ export default function ProfitabilityCalculator() {
     p.category === 'cafe'
   );
   const [selectedBarId, setSelectedBarId] = useState(baristicoProducts[0]?.id || '');
-  const [barDailySales, setBarDailySales] = useState(120); // tazas al día
+  const [barDailySales, setBarDailySales] = useState(
+    () => baristicoProducts[0]?.dailyCapacity?.comfortMax ?? 120
+  ); // tazas al día
   const [barPricePerCup, setBarPricePerCup] = useState(5000); // COP por taza
   const [barCostPerCup, setBarCostPerCup] = useState(600); // COP café grano + leche + azúcar
   const [barDaysPerMonth, setBarDaysPerMonth] = useState(26);
@@ -65,6 +67,23 @@ export default function ProfitabilityCalculator() {
   // Math calculations for BARISTICO
   const currentBarProduct = PRODUCTS.find(p => p.id === selectedBarId);
   const barPurchasePrice = currentBarProduct?.price || 12800000;
+
+  // Capacidad de la cafetera: el simulador no deja pasar del máximo de cada máquina,
+  // para que nadie calcule un negocio con una cafetera de hogar.
+  const barCapacity = currentBarProduct?.dailyCapacity;
+  const BAR_SLIDER_MIN = 10;
+  const barSliderMax = barCapacity?.max ?? 400;
+  const barOverComfort = !!barCapacity && barDailySales > barCapacity.comfortMax;
+  const selectBarMachine = (id: string) => {
+    setSelectedBarId(id);
+    const cap = PRODUCTS.find(p => p.id === id)?.dailyCapacity;
+    if (cap) {
+      // Al cambiar de máquina se parte de su uso cómodo máximo.
+      setBarDailySales(Math.max(BAR_SLIDER_MIN, cap.comfortMax));
+    } else {
+      setBarDailySales(prev => Math.min(prev, 400));
+    }
+  };
 
   const barMonthlyRevenue = barDailySales * barPricePerCup * barDaysPerMonth;
   const barMonthlyCost = barDailySales * barCostPerCup * barDaysPerMonth;
@@ -299,7 +318,7 @@ export default function ProfitabilityCalculator() {
                     <button
                       key={p.id}
                       type="button"
-                      onClick={() => setSelectedBarId(p.id)}
+                      onClick={() => selectBarMachine(p.id)}
                       className={`p-3 rounded-xl border text-left transition-all ${
                         selectedBarId === p.id
                           ? 'border-[#8b5e3c] bg-[#f4f1e4] ring-2 ring-[#8b5e3c]/20'
@@ -317,6 +336,11 @@ export default function ProfitabilityCalculator() {
                       <span className="block text-[10px] font-mono font-bold text-gray-500 mt-2">
                         ${p.price.toLocaleString('es-CO')} COP
                       </span>
+                      {p.dailyCapacity && (
+                        <span className="block text-[10px] font-semibold text-[#8b5e3c] mt-1">
+                          Hasta {p.dailyCapacity.max} cafés/día
+                        </span>
+                      )}
                     </button>
                   ))}
                 </div>
@@ -334,18 +358,40 @@ export default function ProfitabilityCalculator() {
                 </div>
                 <input
                   type="range"
-                  min="20"
-                  max="400"
-                  step="10"
-                  value={barDailySales}
-                  onChange={(e) => setBarDailySales(Number(e.target.value))}
+                  min={BAR_SLIDER_MIN}
+                  max={barSliderMax}
+                  step="5"
+                  value={Math.min(barDailySales, barSliderMax)}
+                  onChange={(e) => setBarDailySales(Math.min(barSliderMax, Number(e.target.value)))}
                   className="w-full accent-[#8b5e3c] h-2 bg-gray-100 rounded-lg cursor-pointer"
                 />
                 <div className="flex justify-between text-[10px] text-gray-400 font-mono mt-1">
-                  <span>20 cafés</span>
-                  <span>150 cafés (Frecuente)</span>
-                  <span>400 cafés (Gran volumen)</span>
+                  <span>{BAR_SLIDER_MIN} cafés</span>
+                  {barCapacity && (
+                    <span>{barCapacity.comfortMin}–{barCapacity.comfortMax} (uso cómodo)</span>
+                  )}
+                  <span>{barSliderMax} cafés (máximo{barCapacity ? ' de esta máquina' : ''})</span>
                 </div>
+
+                {barCapacity && (
+                  <div
+                    className={`mt-3 rounded-xl border px-3.5 py-3 text-xs leading-relaxed ${
+                      barOverComfort
+                        ? 'bg-amber-50 border-amber-200 text-amber-900'
+                        : 'bg-[#f4f1e4] border-[#e8e0d4] text-[#5b4638]'
+                    }`}
+                  >
+                    <p className="font-bold">
+                      Capacidad de esta cafetera: {barCapacity.comfortMin}–{barCapacity.comfortMax} cafés/día en uso cómodo · máximo ~{barCapacity.max}
+                    </p>
+                    {barCapacity.idealFor && <p className="mt-0.5">Ideal para: {barCapacity.idealFor}.</p>}
+                    {barOverComfort && (
+                      <p className="mt-1.5 font-semibold">
+                        Estás por encima del uso cómodo. A este ritmo la máquina trabaja exigida; para este volumen te recomendamos un modelo de mayor capacidad.
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Double Sliders: Price & Cost */}

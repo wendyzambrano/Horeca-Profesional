@@ -116,6 +116,16 @@ function horeca_product_to_app($product) {
         $item['rentalPrice'] = (float) $rental;
     }
 
+    $cap_max = (int) get_post_meta($id, '_horeca_cap_max', true);
+    if ($cap_max > 0) {
+        $item['dailyCapacity'] = [
+            'comfortMin' => (int) get_post_meta($id, '_horeca_cap_comfort_min', true),
+            'comfortMax' => (int) get_post_meta($id, '_horeca_cap_comfort_max', true),
+            'max'        => $cap_max,
+            'idealFor'   => (string) get_post_meta($id, '_horeca_cap_ideal', true),
+        ];
+    }
+
     return apply_filters('horeca_product_to_app', $item, $product);
 }
 
@@ -150,6 +160,10 @@ function horeca_render_metabox($post) {
     $image    = get_post_meta($post->ID, '_horeca_image_url', true);
     $gallery  = implode("\n", (array) get_post_meta($post->ID, '_horeca_gallery_urls', true));
     $app_id   = get_post_meta($post->ID, '_horeca_id', true);
+    $cap_min  = get_post_meta($post->ID, '_horeca_cap_comfort_min', true);
+    $cap_cmax = get_post_meta($post->ID, '_horeca_cap_comfort_max', true);
+    $cap_max  = get_post_meta($post->ID, '_horeca_cap_max', true);
+    $cap_idea = get_post_meta($post->ID, '_horeca_cap_ideal', true);
     ?>
     <p style="margin-top:0">El producto aparece en la app solo si tiene <strong>Marca</strong> y <strong>Tipo de equipo</strong>. El nombre, el precio, la descripción y las imágenes se toman de los campos normales de WooCommerce.</p>
     <table class="form-table" role="presentation">
@@ -212,6 +226,19 @@ function horeca_render_metabox($post) {
                 <p class="description">Una URL por línea. Solo se usa si el producto no tiene "Galería del producto" en WooCommerce.</p>
             </td>
         </tr>
+        <tr>
+            <th>Capacidad diaria (cafeteras)</th>
+            <td>
+                Uso cómodo de
+                <input type="number" min="0" step="1" name="horeca_cap_comfort_min" value="<?php echo esc_attr($cap_min); ?>" class="small-text">
+                a
+                <input type="number" min="0" step="1" name="horeca_cap_comfort_max" value="<?php echo esc_attr($cap_cmax); ?>" class="small-text">
+                cafés/día · Máximo
+                <input type="number" min="0" step="1" name="horeca_cap_max" value="<?php echo esc_attr($cap_max); ?>" class="small-text">
+                <p><input type="text" name="horeca_cap_ideal" value="<?php echo esc_attr($cap_idea); ?>" class="large-text" placeholder="Ideal para… (ej. Cafetería mediana o de alto flujo)"></p>
+                <p class="description">Solo para cafeteras. El simulador de rentabilidad no deja pasar del máximo. Déjalo vacío si no aplica.</p>
+            </td>
+        </tr>
         <?php if ($app_id) : ?>
         <tr>
             <th>ID en la app</th>
@@ -262,6 +289,12 @@ add_action('save_post_product', function ($post_id) {
         }
     }
     update_post_meta($post_id, '_horeca_features', $features);
+
+    foreach (['comfort_min', 'comfort_max', 'max'] as $k) {
+        $v = sanitize_text_field(wp_unslash($_POST['horeca_cap_' . $k] ?? ''));
+        update_post_meta($post_id, '_horeca_cap_' . $k, $v === '' ? '' : max(0, (int) $v));
+    }
+    update_post_meta($post_id, '_horeca_cap_ideal', sanitize_text_field(wp_unslash($_POST['horeca_cap_ideal'] ?? '')));
 
     update_post_meta($post_id, '_horeca_image_url', esc_url_raw(wp_unslash($_POST['horeca_image_url'] ?? '')));
     update_post_meta($post_id, '_horeca_gallery_urls', array_values(array_filter(array_map('esc_url_raw', $lines('horeca_gallery_urls')))));

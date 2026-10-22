@@ -47,6 +47,16 @@ export async function syncProductsFromWooCommerce(): Promise<void> {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const data: unknown = await res.json();
+
+    // Capacidad diaria de respaldo: si el producto de WooCommerce no la tiene llena,
+    // se usa la del catálogo original de la app (mismo ID).
+    const localCapacity = new Map(
+      PRODUCTS.filter((p) => p.dailyCapacity).map((p) => [p.id, p.dailyCapacity!])
+    );
+    const validCapacity = (c: any) =>
+      c && typeof c.max === 'number' && c.max > 0 &&
+      typeof c.comfortMin === 'number' && typeof c.comfortMax === 'number';
+
     const remote = Array.isArray(data)
       ? data
           .filter(isValidProduct)
@@ -56,6 +66,7 @@ export async function syncProductsFromWooCommerce(): Promise<void> {
             features: Array.isArray(p.features) ? p.features : [],
             rating: typeof p.rating === 'number' ? p.rating : 4.5,
             gallery: Array.isArray(p.gallery) ? p.gallery : [],
+            dailyCapacity: validCapacity(p.dailyCapacity) ? p.dailyCapacity : localCapacity.get(p.id),
           }))
       : [];
 

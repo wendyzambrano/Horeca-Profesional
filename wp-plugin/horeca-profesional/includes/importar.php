@@ -126,6 +126,11 @@ function horeca_run_import($overwrite = false, $download_imgs = true) {
             update_post_meta($post_id, '_horeca_rental_price', isset($item['rentalPrice']) ? (float) $item['rentalPrice'] : '');
             update_post_meta($post_id, '_horeca_specs', array_map('sanitize_text_field', (array) ($item['specs'] ?? [])));
             update_post_meta($post_id, '_horeca_features', horeca_clean_features($item['features'] ?? []));
+            $cap = isset($item['dailyCapacity']) && is_array($item['dailyCapacity']) ? $item['dailyCapacity'] : [];
+            update_post_meta($post_id, '_horeca_cap_comfort_min', isset($cap['comfortMin']) ? (int) $cap['comfortMin'] : '');
+            update_post_meta($post_id, '_horeca_cap_comfort_max', isset($cap['comfortMax']) ? (int) $cap['comfortMax'] : '');
+            update_post_meta($post_id, '_horeca_cap_max', isset($cap['max']) ? (int) $cap['max'] : '');
+            update_post_meta($post_id, '_horeca_cap_ideal', sanitize_text_field($cap['idealFor'] ?? ''));
             update_post_meta($post_id, '_horeca_image_url', esc_url_raw($item['image'] ?? ''));
             update_post_meta($post_id, '_horeca_gallery_urls', array_values(array_filter(array_map('esc_url_raw', (array) ($item['gallery'] ?? [])))));
 
