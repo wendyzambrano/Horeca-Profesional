@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Universo Horeca – App
  * Description:       Integra la app Universo Horeca (creada en Google AI Studio) en WordPress y la sincroniza con los productos de WooCommerce. Usa el shortcode [horeca_app].
- * Version:           1.0.2
+ * Version:           1.0.3
  * Requires at least: 6.5
  * Requires PHP:      7.4
  * Requires Plugins:  woocommerce
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('HORECA_VERSION', '1.0.2');
+define('HORECA_VERSION', '1.0.3');
 define('HORECA_FILE', __FILE__);
 define('HORECA_PATH', plugin_dir_path(__FILE__));
 define('HORECA_URL', plugin_dir_url(__FILE__));
@@ -144,22 +144,35 @@ add_filter('template_include', function ($template) {
     return $template;
 }, 99);
 
-/** En la plantilla de pantalla completa se quitan los estilos del tema para que no choquen con la app. */
-add_action('wp_print_styles', function () {
+/**
+ * En la plantilla de pantalla completa se quitan los estilos del tema y de WordPress
+ * (estilos globales, bloques, etc.). Esos estilos tienen prioridad sobre los de la app
+ * y cambiaban colores, por ejemplo el texto del botón "Barístico" en celular.
+ */
+function horeca_dequeue_foreign_styles() {
     if (!horeca_is_fullscreen_page()) {
         return;
     }
-    $theme_urls = array_unique([get_template_directory_uri(), get_stylesheet_directory_uri()]);
-    $styles     = wp_styles();
+    $keep   = apply_filters('horeca_keep_styles', ['horeca-app', 'admin-bar', 'dashicons']);
+    $styles = wp_styles();
     foreach ((array) $styles->queue as $handle) {
-        $src = isset($styles->registered[$handle]) ? (string) $styles->registered[$handle]->src : '';
-        foreach ($theme_urls as $url) {
-            if ($src !== '' && strpos($src, $url) === 0) {
-                wp_dequeue_style($handle);
-            }
+        if (!in_array($handle, $keep, true)) {
+            wp_dequeue_style($handle);
         }
     }
-}, 100);
+}
+add_action('wp_print_styles', 'horeca_dequeue_foreign_styles', 100);
+add_action('wp_print_footer_scripts', 'horeca_dequeue_foreign_styles', 1);
+
+/* Estilos de bloques que WordPress imprime por separado en temas de bloques. */
+add_action('wp', function () {
+    if (horeca_is_fullscreen_page()) {
+        remove_action('wp_head', 'wp_enqueue_stored_styles');
+        remove_action('wp_footer', 'wp_enqueue_stored_styles', 1);
+        remove_action('wp_head', 'wp_print_auto_sizes_contain_css_fix', 1);
+        add_filter('should_load_separate_core_block_assets', '__return_false');
+    }
+});
 
 /* -------------------------------------------------------------------------
  * Enlace "Configurar" en la lista de plugins
