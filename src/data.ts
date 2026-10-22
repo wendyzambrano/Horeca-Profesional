@@ -577,40 +577,6 @@ export const PRODUCTS: Product[] = [
     ]
   },
   {
-    id: 'bar-cafe-compact',
-    brand: 'bellezza',
-    category: 'cafe',
-    name: 'Bellezza Bellona Dual Boiler',
-    description: 'Líneas rectas, moderno y potente: con Bellezza Bellona y su doble caldera nos acercamos a la perfección barista. Una máquina de espresso de gama alta que es una verdadera obra de arte, equipada con una gran palanca de vapor de madera, control PID y un diseño extraordinario disponible en negro, blanco y metal.',
-    price: 7899899,
-    image: 'https://distritocafetero.com/wp-content/uploads/2026/07/Belleza-bellona-negro.webp',
-    specs: [
-      'Tipo de máquina: Doble caldera (Dual Boiler) aislada térmicamente',
-      'Grupo de infusión: Grupo saturado de acero inoxidable Bellezza',
-      'Capacidad de calderas: 500ml (café) + 1 Litro (vapor de acero inoxidable)',
-      'Estabilidad térmica: Control PID Bellezza integrado',
-      'Depósito de agua: Depósito exterior redondo de 1.8 Litros',
-      'Conexión de agua: Permite conexión fija a red de agua directa',
-      'Controles: Botones de control con cronómetro (Shot Timer) integrado',
-      'Presión y Manómetro: Bomba de vibración con manómetro de presión de bomba',
-      'Dimensiones (An x Al x Pr): 270 x 415 x 320 mm',
-      'Peso y Potencia: 23 kg | Consumo energético de 2550 W',
-      'Equipamiento premium: Tamper de acero inoxidable y 2 portafiltros'
-    ],
-    features: [
-      { label: 'Doble Caldera Independiente', value: 'Permite extraer café a temperatura estable y texturizar leche con vapor infinito simultáneamente.' },
-      { label: 'Palanca de Vapor con Mango de Madera', value: 'Gran palanca con mango de madera natural que proporciona un control instantáneo, ergonómico y elegante.' },
-      { label: 'Depósito Redondo Externo', value: 'Diseño cilíndrico extravagante y moderno de 1.8L con sensor de nivel para evitar cortes en la erogación.' },
-      { label: 'Control PID y Shot Timer', value: 'Regulación precisa de temperatura y visualización del tiempo de extracción para recetas perfectas.' },
-      { label: 'Estética Minimalista y Vanguardista', value: 'Estructura compacta en acero inoxidable con acabados en negro, blanco o metal pulido.' },
-      { label: 'Accesorios Profesionales Incluidos', value: 'Viene equipada con 2 portafiltros profesionales y tamper oficial Bellezza de acero inoxidable.' }
-    ],
-    rating: 4.4,
-    gallery: [
-      'https://distritocafetero.com/wp-content/uploads/2026/07/Belleza-bellona-negro.webp'
-    ]
-  },
-  {
     id: 'bar-grind-silent',
     brand: 'baristico',
     category: 'molino',
