@@ -1001,6 +1001,25 @@ export default function App() {
               Simulador Financiero
             </a>
           </div>
+          <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-[11px] text-gray-500 font-medium pt-4 border-t border-gray-100">
+            <a
+              href="https://artiq.com.co/politica-privacidad/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 decoration-gray-300 hover:text-gray-800 hover:decoration-gray-500 transition-colors"
+            >
+              Política de privacidad y tratamiento de datos personales
+            </a>
+            <span className="hidden sm:inline text-gray-300" aria-hidden="true">|</span>
+            <a
+              href="https://artiq.com.co/politica-devoluciones-garantias/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 decoration-gray-300 hover:text-gray-800 hover:decoration-gray-500 transition-colors"
+            >
+              Política de devoluciones y garantías
+            </a>
+          </div>
           <p className="text-[10px]">
             &copy; {new Date().getFullYear()} Horeca profesional. Todos los derechos reservados. Las estimaciones son orientativas y se calculan basándose en costes medios del sector en Colombia.
           </p>
