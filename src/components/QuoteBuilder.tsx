@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { RequestedProductItem, Product } from '../types';
 import { PRODUCTS } from '../data';
-import { Trash2, ShoppingBag, Send, ArrowRight, Building2, User, Mail, Phone, MapPin, AlignLeft, CheckCircle2 } from 'lucide-react';
+import { isWordPress } from '../wordpress';
+import { Trash2, ShoppingBag, Send, ArrowRight, Building2, User, Mail, Phone, MapPin, AlignLeft, CheckCircle2, MessageCircle } from 'lucide-react';
 
 interface QuoteBuilderProps {
   quoteItems: RequestedProductItem[];
@@ -26,15 +27,15 @@ export default function QuoteBuilder({
   onUpdateMode,
   onSubmitInquiry
 }: QuoteBuilderProps) {
-  const [venueName, setVenueName] = useState('');
-  const [venueType, setVenueType] = useState<'bar' | 'restaurante' | 'cafeteria' | 'discoteca' | 'hotel' | 'otro'>('cafeteria');
-  const [city, setCity] = useState('');
   const [contactName, setContactName] = useState('');
   const [contactEmail, setContactEmail] = useState('');
   const [contactPhone, setContactPhone] = useState('');
-  const [description, setDescription] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [referenceId, setReferenceId] = useState('');
+  const [sentEmail, setSentEmail] = useState('');
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
+  const [honeypot, setHoneypot] = useState('');
 
   const getProductDetails = (productId: string): Product | undefined => {
     return PRODUCTS.find(p => p.id === productId);
@@ -72,35 +73,71 @@ export default function QuoteBuilder({
 
   const { oneTimeTotal, rentingMonthlyTotal } = calculateTotals();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!venueName || !city || !contactName || !contactEmail || !contactPhone) {
-      alert('Por favor, completa todos los campos requeridos (*).');
+    if (sending) return;
+    setSendError('');
+    if (!contactName.trim() || !contactEmail.trim() || !contactPhone.trim()) {
+      setSendError('Completa tu nombre, WhatsApp y correo.');
       return;
     }
 
+    let referencia = 'SOL-' + Math.floor(1000 + Math.random() * 9000);
+
+    // En WordPress la solicitud se guarda y se envían los correos (al equipo y al cliente).
+    if (isWordPress()) {
+      setSending(true);
+      try {
+        const res = await fetch(`${window.HORECA_WP!.restUrl}solicitudes`, {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            nombre: contactName.trim(),
+            whatsapp: contactPhone.trim(),
+            correo: contactEmail.trim(),
+            empresa_web: honeypot,
+            items: quoteItems.map(item => ({
+              productId: item.productId,
+              wcId: (getProductDetails(item.productId) as (Product & { wcId?: number }) | undefined)?.wcId,
+              quantity: item.quantity,
+            })),
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data?.ok) {
+          setSendError(data?.message || 'No pudimos enviar tu solicitud. Revisa tu conexión e inténtalo de nuevo.');
+          setSending(false);
+          return;
+        }
+        referencia = data.referencia || referencia;
+      } catch {
+        setSendError('No pudimos enviar tu solicitud. Revisa tu conexión e inténtalo de nuevo.');
+        setSending(false);
+        return;
+      }
+      setSending(false);
+    }
+
+    // El formulario solo pide nombre, WhatsApp y correo; los demás datos quedan vacíos.
     onSubmitInquiry({
-      venueName,
-      venueType,
-      city,
-      contactName,
-      contactEmail,
-      contactPhone,
-      description
+      venueName: '',
+      venueType: 'otro',
+      city: '',
+      contactName: contactName.trim(),
+      contactEmail: contactEmail.trim(),
+      contactPhone: contactPhone.trim(),
+      description: ''
     });
 
-    // Generate simulated reference ID
-    const randomRef = 'SOL-' + Math.floor(1000 + Math.random() * 9000);
-    setReferenceId(randomRef);
+    setReferenceId(referencia);
+    setSentEmail(contactEmail.trim());
     setSubmitted(true);
 
     // Reset form
-    setVenueName('');
-    setCity('');
     setContactName('');
     setContactEmail('');
     setContactPhone('');
-    setDescription('');
   };
 
   if (submitted) {
@@ -111,8 +148,10 @@ export default function QuoteBuilder({
         </div>
         <h3 className="text-2xl font-bold text-gray-900 tracking-tight">¡Solicitud Enviada con Éxito!</h3>
         <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-          Hemos registrado tu presupuesto con la referencia <span className="font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">{referenceId}</span>. 
-          Los proveedores oficiales de <span className="font-semibold text-sky-800">Artiq</span> y <span className="font-semibold text-baristico-600">Barístico</span> han sido notificados de inmediato.
+          Hemos registrado tu presupuesto con la referencia <span className="font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">{referenceId}</span>.
+          {sentEmail && (
+            <> Te enviamos la cotización a <span className="font-semibold text-gray-800">{sentEmail}</span>; si no la ves, revisa la carpeta de spam.</>
+          )}
         </p>
         <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-left space-y-2 mt-6 max-w-md mx-auto text-xs text-gray-600">
           <div className="flex justify-between">
@@ -255,142 +294,89 @@ export default function QuoteBuilder({
 
       {/* FORM LEAD SUBMISSION (Right 5 Columns) */}
       <div className="lg:col-span-5">
-        <form onSubmit={handleSubmit} className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-4">
+        <form onSubmit={handleSubmit} className="relative bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-4">
           <h3 className="text-lg font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-amber-700" />
-            Datos del Local de Hostelería
+            <User className="w-5 h-5 text-amber-700" />
+            Tus datos de contacto
           </h3>
 
           <div>
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-              Nombre de la Marca/Local *
+            <label htmlFor="quote-name" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+              Nombre *
             </label>
             <div className="relative">
-              <Building2 className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+              <User className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
               <input
+                id="quote-name"
                 type="text"
                 required
-                placeholder="Ej. Cafetería Plaza, Club Blue Wave"
-                value={venueName}
-                onChange={(e) => setVenueName(e.target.value)}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-sky-500 focus:bg-white transition-all text-gray-800"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                Tipo de Local *
-              </label>
-              <select
-                value={venueType}
-                onChange={(e) => setVenueType(e.target.value as any)}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2 px-3 text-sm focus:outline-none focus:border-sky-500 focus:bg-white transition-all text-gray-800 font-medium"
-              >
-                <option value="bar">Bar de Copas</option>
-                <option value="cafeteria">Cafetería</option>
-                <option value="restaurante">Restaurante</option>
-                <option value="discoteca">Discoteca</option>
-                <option value="hotel">Hotel</option>
-                <option value="otro">Otro</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                Ciudad / Ubicación *
-              </label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  required
-                  placeholder="Ej. Cali, Medellín"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-sky-500 focus:bg-white transition-all text-gray-800"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-              Nombre de Contacto *
-            </label>
-            <div className="relative">
-              <User className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                required
-                placeholder="Nombre del propietario o gerente"
+                autoComplete="name"
+                placeholder="Tu nombre"
                 value={contactName}
                 onChange={(e) => setContactName(e.target.value)}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-sky-500 focus:bg-white transition-all text-gray-800"
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2.5 pl-9 pr-3 text-sm focus:outline-none focus:border-sky-500 focus:bg-white transition-all text-gray-800"
               />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                Email *
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-                <input
-                  type="email"
-                  required
-                  placeholder="gerencia@local.com"
-                  value={contactEmail}
-                  onChange={(e) => setContactEmail(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-sky-500 focus:bg-white transition-all text-gray-800"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-                Teléfono Movil *
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-                <input
-                  type="tel"
-                  required
-                  placeholder="Ej. 3151234567"
-                  value={contactPhone}
-                  onChange={(e) => setContactPhone(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-sky-500 focus:bg-white transition-all text-gray-800"
-                />
-              </div>
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
-              Descripción del Local / Necesidades Especiales (Opcional)
+            <label htmlFor="quote-whatsapp" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+              WhatsApp *
             </label>
             <div className="relative">
-              <AlignLeft className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-              <textarea
-                rows={3}
-                placeholder="Describe tu apertura, horarios, volumen de clientes, o si necesitas condiciones especiales de entrega..."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-sky-500 focus:bg-white transition-all text-gray-800"
+              <MessageCircle className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+              <input
+                id="quote-whatsapp"
+                type="tel"
+                required
+                inputMode="tel"
+                autoComplete="tel"
+                placeholder="Ej. 315 123 4567"
+                value={contactPhone}
+                onChange={(e) => setContactPhone(e.target.value)}
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2.5 pl-9 pr-3 text-sm focus:outline-none focus:border-sky-500 focus:bg-white transition-all text-gray-800"
               />
             </div>
           </div>
+
+          <div>
+            <label htmlFor="quote-email" className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+              Correo *
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+              <input
+                id="quote-email"
+                type="email"
+                required
+                autoComplete="email"
+                placeholder="tucorreo@ejemplo.com"
+                value={contactEmail}
+                onChange={(e) => setContactEmail(e.target.value)}
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl py-2.5 pl-9 pr-3 text-sm focus:outline-none focus:border-sky-500 focus:bg-white transition-all text-gray-800"
+              />
+            </div>
+          </div>
+
+          {/* Campo trampa para bots (oculto para las personas) */}
+          <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}>
+            <label htmlFor="quote-empresa-web">No llenar</label>
+            <input id="quote-empresa-web" type="text" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+          </div>
+
+          {sendError && (
+            <p role="alert" className="text-xs font-semibold text-red-700 bg-red-50 border border-red-100 rounded-xl px-3 py-2">
+              {sendError}
+            </p>
+          )}
 
           <button
             type="submit"
-            disabled={quoteItems.length === 0}
+            disabled={quoteItems.length === 0 || sending}
             className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed mt-2"
           >
             <Send className="w-4 h-4" />
-            Enviar Petición a Proveedores
+            {sending ? 'Enviando…' : 'Enviar Petición a Proveedores'}
           </button>
           
           <p className="text-[10px] text-gray-400 text-center leading-normal">

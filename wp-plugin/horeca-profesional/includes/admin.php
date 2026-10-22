@@ -185,6 +185,8 @@ function horeca_render_admin_page() {
         </ol>
         <p>¿Prefieres la app dentro de una página normal del tema? Escribe el shortcode <code>[horeca_app]</code> en un bloque "Shortcode".</p>
 
+        <?php horeca_render_email_settings(); ?>
+
         <h2>Cómo funciona la sincronización</h2>
         <ul style="list-style:disc;padding-left:20px">
             <li>La app lee los productos de WooCommerce cada vez que alguien abre la página.</li>
