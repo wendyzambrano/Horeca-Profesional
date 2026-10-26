@@ -221,7 +221,7 @@ export default function App() {
         document.title = 'Simulador de Rentabilidad | Universo Horeca';
       } else if (['presupuesto', 'cotizacion', 'quote', 'carrito'].includes(rawHash)) {
         setCurrentView('quote');
-        document.title = 'Mi Presupuesto | Universo Horeca';
+        document.title = 'Solicitar Cotización | Universo Horeca';
       }
     };
 
@@ -255,6 +255,21 @@ export default function App() {
     }
   };
 
+  // Botón "Solicitar Cotización" de la ficha: agrega el equipo (sin duplicarlo),
+  // cierra la ficha y lleva a la pestaña de cotización, mostrando el formulario.
+  const handleRequestQuote = (productId: string) => {
+    if (!quoteItems.some(item => item.productId === productId)) {
+      handleAddToQuote(productId, 'purchase');
+    }
+    setSelectedDetailProduct(null);
+    navigateToView('quote');
+    window.setTimeout(() => {
+      if (window.innerWidth < 1024) {
+        document.getElementById('quote-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 350);
+  };
+
   const navigateToView = (view: 'catalog' | 'calculator' | 'quote') => {
     setCurrentView(view);
     const hash = view === 'catalog' 
@@ -265,7 +280,7 @@ export default function App() {
       document.title = 'Simulador de Rentabilidad | Universo Horeca';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (view === 'quote') {
-      document.title = 'Mi Presupuesto | Universo Horeca';
+      document.title = 'Solicitar Cotización | Universo Horeca';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -475,10 +490,11 @@ export default function App() {
                     ? 'border-gray-900 bg-gray-50 text-gray-900' 
                     : 'border-gray-200 bg-white hover:bg-gray-50 text-gray-600'
                 }`}
-                title="Presupuesto actual"
+                title="Solicitar cotización"
+                aria-label="Solicitar cotización"
               >
                 <ShoppingCart className="w-4.5 h-4.5" />
-                <span className="hidden sm:inline text-xs font-bold">Mi Presupuesto</span>
+                <span className="hidden sm:inline text-xs font-bold">Solicitar Cotización</span>
                 {quoteItems.length > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 bg-sky-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center animate-bounce">
                     {quoteItems.length}
@@ -979,6 +995,7 @@ export default function App() {
         isOpen={Boolean(selectedDetailProduct)}
         onClose={() => setSelectedDetailProduct(null)}
         onAddToQuote={handleAddToQuote}
+        onRequestQuote={handleRequestQuote}
         isInQuote={quoteItems.some(i => i.productId === selectedDetailProduct?.id)}
       />
 

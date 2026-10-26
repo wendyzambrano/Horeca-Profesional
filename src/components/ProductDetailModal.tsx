@@ -23,6 +23,8 @@ interface ProductDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddToQuote: (productId: string, mode: 'purchase' | 'rent') => void;
+  /** Agrega el equipo (si no está) y abre la pestaña de cotización con el formulario. */
+  onRequestQuote?: (productId: string) => void;
   isInQuote: boolean;
 }
 
@@ -31,6 +33,7 @@ export default function ProductDetailModal({
   isOpen,
   onClose,
   onAddToQuote,
+  onRequestQuote,
   isInQuote,
 }: ProductDetailModalProps) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -334,29 +337,29 @@ export default function ProductDetailModal({
               <div className="pt-1">
                 <button
                   type="button"
-                  onClick={() => onAddToQuote(product.id, 'purchase')}
-                  className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm transition-all shadow-sm ${
-                    isInQuote
-                      ? isArtiq
-                        ? 'bg-artiq-50 text-artiq-700 border-2 border-artiq-300 hover:bg-artiq-100'
-                        : 'bg-[#f4f1e4] text-[#5b4638] border-2 border-[#8b5e3c]/60 hover:bg-[#e8e0d4]'
-                      : isArtiq
-                        ? 'bg-artiq-500 hover:bg-artiq-600 text-white shadow-md active:scale-98'
-                        : 'bg-[#5b4638] hover:bg-[#1c1c1c] text-[#f4f1e4] shadow-md active:scale-98'
+                  onClick={() => {
+                    if (onRequestQuote) {
+                      onRequestQuote(product.id);
+                    } else {
+                      if (!isInQuote) onAddToQuote(product.id, 'purchase');
+                      onClose();
+                    }
+                  }}
+                  className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold text-sm transition-all shadow-md active:scale-98 ${
+                    isArtiq
+                      ? 'bg-artiq-500 hover:bg-artiq-600 text-white'
+                      : 'bg-[#5b4638] hover:bg-[#1c1c1c] text-[#f4f1e4]'
                   }`}
                 >
-                  {isInQuote ? (
-                    <>
-                      <Check className={`w-4 h-4 ${isArtiq ? 'text-artiq-600' : 'text-[#8b5e3c]'}`} />
-                      <span>Agregado al Presupuesto</span>
-                    </>
-                  ) : (
-                    <>
-                      <ShoppingCart className="w-4 h-4" />
-                      <span>Añadir a Cotización</span>
-                    </>
-                  )}
+                  <ShoppingCart className="w-4 h-4" />
+                  <span>Solicitar Cotización</span>
                 </button>
+                {isInQuote && (
+                  <p className={`mt-2 flex items-center justify-center gap-1.5 text-xs font-semibold ${isArtiq ? 'text-artiq-700' : 'text-[#5b4638]'}`}>
+                    <Check className="w-3.5 h-3.5" />
+                    Este equipo ya está en tu cotización
+                  </p>
+                )}
               </div>
 
             </div>

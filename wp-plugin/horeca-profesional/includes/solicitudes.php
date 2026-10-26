@@ -303,7 +303,7 @@ function horeca_rest_crear_solicitud(WP_REST_Request $req) {
         }
     }
     if (!$items) {
-        return new WP_Error('horeca_items', 'Tu presupuesto está vacío.', ['status' => 400]);
+        return new WP_Error('horeca_items', 'Tu cotización está vacía.', ['status' => 400]);
     }
 
     $referencia = 'SOL-' . wp_date('ymd') . '-' . strtoupper(wp_generate_password(4, false, false));
@@ -436,7 +436,7 @@ function horeca_render_email_settings() {
     <?php elseif ($msg === 'prueba_error') : ?>
         <div class="notice notice-error inline"><p>El servidor no pudo enviar el correo de prueba. Configura el envío SMTP (ver nota abajo).</p></div>
     <?php endif; ?>
-    <p>Cada vez que un cliente envía el formulario de <strong>Mi Presupuesto</strong>: se guarda en <a href="<?php echo esc_url(admin_url('edit.php?post_type=' . HORECA_CPT_SOLICITUD)); ?>">Solicitudes Horeca</a>, te llega un aviso a los correos de abajo y el cliente recibe su cotización por correo.</p>
+    <p>Cada vez que un cliente envía el formulario de <strong>Solicitar Cotización</strong>: se guarda en <a href="<?php echo esc_url(admin_url('edit.php?post_type=' . HORECA_CPT_SOLICITUD)); ?>">Solicitudes Horeca</a>, te llega un aviso a los correos de abajo y el cliente recibe su cotización por correo.</p>
     <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
         <?php wp_nonce_field('horeca_guardar_correos'); ?>
         <input type="hidden" name="action" value="horeca_guardar_correos">

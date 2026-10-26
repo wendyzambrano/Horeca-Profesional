@@ -148,7 +148,7 @@ export default function QuoteBuilder({
         </div>
         <h3 className="text-2xl font-bold text-gray-900 tracking-tight">¡Solicitud Enviada con Éxito!</h3>
         <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-          Hemos registrado tu presupuesto con la referencia <span className="font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">{referenceId}</span>.
+          Hemos registrado tu solicitud de cotización con la referencia <span className="font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">{referenceId}</span>.
           {sentEmail && (
             <> Te enviamos la cotización a <span className="font-semibold text-gray-800">{sentEmail}</span>; si no la ves, revisa la carpeta de spam.</>
           )}
@@ -192,7 +192,7 @@ export default function QuoteBuilder({
           {quoteItems.length === 0 ? (
             <div className="text-center py-12 px-4">
               <div className="text-gray-300 text-5xl mb-3">🛒</div>
-              <p className="text-gray-600 font-medium">Tu presupuesto está vacío.</p>
+              <p className="text-gray-600 font-medium">Tu cotización está vacía.</p>
               <p className="text-xs text-gray-400 mt-1 max-w-sm mx-auto">
                 Navega por las secciones de **Mundo Artiq** o **Mundo Barístico** y añade los productos que necesitas para tu local de hostelería.
               </p>
@@ -261,7 +261,7 @@ export default function QuoteBuilder({
                         type="button"
                         onClick={() => onRemoveItem(item.productId)}
                         className="text-gray-400 hover:text-red-500 p-1 rounded-lg transition-colors"
-                        title="Eliminar del presupuesto"
+                        title="Eliminar de la cotización"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -294,7 +294,7 @@ export default function QuoteBuilder({
 
       {/* FORM LEAD SUBMISSION (Right 5 Columns) */}
       <div className="lg:col-span-5">
-        <form onSubmit={handleSubmit} className="relative bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-4">
+        <form id="quote-form" onSubmit={handleSubmit} className="relative scroll-mt-32 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-4">
           <h3 className="text-lg font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center gap-2">
             <User className="w-5 h-5 text-amber-700" />
             Tus datos de contacto
