@@ -16,7 +16,7 @@ define('HORECA_CPT_SOLICITUD', 'horeca_solicitud');
  * ---------------------------------------------------------------------- */
 function horeca_email_settings() {
     $defaults = [
-        'admin_recipients' => get_option('admin_email'),
+        'admin_recipients' => 'marketing@artiq.com.co',
         'from_name'        => 'Horeca Profesional',
         'customer_subject' => 'Tu cotización Horeca Profesional {referencia}',
         'customer_body'    => horeca_default_customer_template(),
