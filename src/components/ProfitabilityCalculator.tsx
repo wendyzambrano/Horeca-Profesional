@@ -534,7 +534,7 @@ export default function ProfitabilityCalculator() {
               <div>
                 <div className="flex justify-between items-center mb-1">
                   <label className="text-xs font-bold text-gray-700 uppercase tracking-wider">
-                    3. Bolsas de Hielo Diarias (10 kg c/u)
+                    3. {icePurpose === 'selling' ? '¿Cuántas bolsas de hielo de 10 kg vendes al día?' : '¿Cuántas bolsas de hielo de 10 kg usas al día?'}
                   </label>
                   <span className="text-lg font-extrabold text-artiq-500 font-mono font-bold">
                     {iceDailyBags} <span className="text-xs text-gray-500">bolsas/día ({iceDailyBags * iceBagWeight} kg)</span>
