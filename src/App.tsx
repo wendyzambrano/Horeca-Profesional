@@ -6,6 +6,7 @@ import ProductDetailModal from './components/ProductDetailModal';
 import ProfitabilityCalculator from './components/ProfitabilityCalculator';
 import QuoteBuilder from './components/QuoteBuilder';
 import WorldCategoryBar from './components/WorldCategoryBar';
+import QuotePopup from './components/QuotePopup';
 import { 
   Building2, ShoppingCart, Calculator, 
   Sparkles, Snowflake, Coffee, Layers, ChevronRight, HelpCircle, Info, CheckCircle, ChevronDown,
@@ -990,6 +991,9 @@ export default function App() {
       </main>
 
       {/* Product Detail Modal (Web Catalog Quick Info) */}
+      {/* Pop up de cotización (aparece una vez por visita) */}
+      <QuotePopup suppressed={currentView === 'quote' || Boolean(selectedDetailProduct)} />
+
       <ProductDetailModal
         product={selectedDetailProduct}
         isOpen={Boolean(selectedDetailProduct)}

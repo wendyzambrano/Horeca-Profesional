@@ -108,6 +108,7 @@ add_filter('manage_' . HORECA_CPT_SOLICITUD . '_posts_columns', function () {
         'h_whats'   => 'WhatsApp',
         'h_correo'  => 'Correo',
         'h_total'   => 'Total',
+        'h_origen'  => 'Origen',
         'h_correos' => 'Correo al cliente',
         'date'      => 'Fecha',
     ];
@@ -132,6 +133,9 @@ add_action('manage_' . HORECA_CPT_SOLICITUD . '_posts_custom_column', function (
             break;
         case 'h_total':
             echo esc_html(horeca_money((float) get_post_meta($post_id, '_h_total', true)));
+            break;
+        case 'h_origen':
+            echo esc_html(get_post_meta($post_id, '_h_origen', true) ?: 'Formulario de cotización');
             break;
         case 'h_correos':
             $ok = get_post_meta($post_id, '_h_mail_customer', true);
@@ -322,6 +326,8 @@ function horeca_rest_crear_solicitud(WP_REST_Request $req) {
     update_post_meta($post_id, '_h_correo', $correo);
     update_post_meta($post_id, '_h_items', $items);
     update_post_meta($post_id, '_h_total', $total);
+    $origen = ($p['origen'] ?? '') === 'popup' ? 'Pop up' : 'Formulario de cotización';
+    update_post_meta($post_id, '_h_origen', $origen);
 
     $s    = horeca_email_settings();
     $data = [
@@ -362,7 +368,8 @@ function horeca_rest_crear_solicitud(WP_REST_Request $req) {
             . '<p style="font-size:14px;line-height:1.7;margin:0 0 16px">'
             . '<strong>Nombre:</strong> ' . esc_html($nombre) . '<br>'
             . '<strong>WhatsApp:</strong> <a href="' . esc_url('https://wa.me/' . $digits) . '">' . esc_html($whatsapp) . '</a><br>'
-            . '<strong>Correo:</strong> <a href="mailto:' . esc_attr($correo) . '">' . esc_html($correo) . '</a></p>'
+            . '<strong>Correo:</strong> <a href="mailto:' . esc_attr($correo) . '">' . esc_html($correo) . '</a><br>'
+            . '<strong>Origen:</strong> ' . esc_html($origen) . '</p>'
             . horeca_items_table_html($items, $total)
             . '<p style="font-size:13px;margin-top:16px"><a href="' . esc_url(admin_url('post.php?post=' . $post_id . '&action=edit')) . '">Ver la solicitud en WordPress</a></p>'
             . '</div>';

@@ -31,6 +31,43 @@ function isValidProduct(p: any): p is Product {
   );
 }
 
+export interface QuoteRequest {
+  nombre: string;
+  whatsapp: string;
+  correo: string;
+  items: { productId: string; wcId?: number; quantity: number }[];
+  /** De dónde viene la solicitud (ej. "popup"); se ve en el aviso al equipo. */
+  origen?: string;
+  /** Campo trampa para bots. */
+  empresa_web?: string;
+}
+
+/**
+ * Envía una solicitud de cotización a WordPress (se guarda y se envían los correos).
+ * Fuera de WordPress (vista previa) solo simula el envío.
+ */
+export async function sendQuoteRequest(data: QuoteRequest): Promise<{ ok: true; referencia: string } | { ok: false; message: string }> {
+  const fallbackRef = 'SOL-' + Math.floor(1000 + Math.random() * 9000);
+  if (!isWordPress()) {
+    return { ok: true, referencia: fallbackRef };
+  }
+  try {
+    const res = await fetch(`${window.HORECA_WP!.restUrl}solicitudes`, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok || !body?.ok) {
+      return { ok: false, message: body?.message || 'No pudimos enviar tu solicitud. Revisa tu conexión e inténtalo de nuevo.' };
+    }
+    return { ok: true, referencia: body.referencia || fallbackRef };
+  } catch {
+    return { ok: false, message: 'No pudimos enviar tu solicitud. Revisa tu conexión e inténtalo de nuevo.' };
+  }
+}
+
 /**
  * Trae los productos desde WooCommerce y reemplaza el catálogo local.
  * WooCommerce es la fuente de verdad: precios, nombres, fotos y descripciones

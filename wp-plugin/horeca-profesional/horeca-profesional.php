@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Universo Horeca – App
  * Description:       Integra la app Universo Horeca (creada en Google AI Studio) en WordPress y la sincroniza con los productos de WooCommerce. Usa el shortcode [horeca_app].
- * Version:           1.1.1
+ * Version:           1.2.0
  * Requires at least: 6.5
  * Requires PHP:      7.4
  * Requires Plugins:  woocommerce
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('HORECA_VERSION', '1.1.1');
+define('HORECA_VERSION', '1.2.0');
 define('HORECA_FILE', __FILE__);
 define('HORECA_PATH', plugin_dir_path(__FILE__));
 define('HORECA_URL', plugin_dir_url(__FILE__));

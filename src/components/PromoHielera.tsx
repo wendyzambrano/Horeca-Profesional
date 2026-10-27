@@ -6,7 +6,9 @@ export const PROMO_MIN_ARTIQ = 4000000;
 
 interface Props {
   /** Total cotizado en equipos Artiq (COP). */
-  artiqTotal: number;
+  artiqTotal?: number;
+  /** Sin la barra de avance (para el pop up). */
+  compact?: boolean;
 }
 
 const formatCOP = (n: number) => '$' + Math.round(n).toLocaleString('es-CO');
@@ -15,7 +17,7 @@ const formatCOP = (n: number) => '$' + Math.round(n).toLocaleString('es-CO');
  * Promoción en la pestaña de cotización:
  * "Regístrate y obtén 1 hielera de 12 kg gratis por compras superiores a $4.000.000 en el portafolio Artiq".
  */
-export default function PromoHielera({ artiqTotal }: Props) {
+export default function PromoHielera({ artiqTotal = 0, compact = false }: Props) {
   const qualifies = artiqTotal > PROMO_MIN_ARTIQ;
   const progress = Math.min(100, Math.round((artiqTotal / PROMO_MIN_ARTIQ) * 100));
   const missing = Math.max(0, PROMO_MIN_ARTIQ - artiqTotal);
@@ -58,50 +60,54 @@ export default function PromoHielera({ artiqTotal }: Props) {
             referrerPolicy="no-referrer"
             loading="lazy"
           />
-          <span className="absolute -top-1 -right-1 rotate-12 rounded-full bg-amber-400 text-artiq-800 text-[10px] font-black uppercase px-2 py-1 shadow-md">
+          <span className="absolute -top-1 -left-2 -rotate-12 rounded-full bg-amber-400 text-artiq-800 text-[10px] font-black uppercase px-2 py-1 shadow-md">
             $0
           </span>
         </div>
       </div>
 
+      {!compact && (
+        <>
       {/* Avance hacia el regalo */}
-      <div className="relative bg-black/20 backdrop-blur-sm px-5 py-3.5 border-t border-white/10">
-        <div className="flex items-center justify-between text-[11px] font-semibold text-white/80 mb-1.5">
-          <span>Tu cotización Artiq</span>
-          <span className="tabular-nums">
-            {formatCOP(artiqTotal)} <span className="text-white/50">/ $4.000.000</span>
-          </span>
-        </div>
-        <div
-          className="h-2.5 rounded-full bg-white/15 overflow-hidden"
-          role="progressbar"
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={progress}
-          aria-label="Avance hacia la hielera gratis"
-        >
-          <div
-            className={`h-full rounded-full transition-all duration-700 ${
-              qualifies ? 'bg-gradient-to-r from-amber-300 to-amber-400' : 'bg-gradient-to-r from-artiq-100 to-white'
-            }`}
-            style={{ width: `${Math.max(progress, artiqTotal > 0 ? 4 : 0)}%` }}
-          />
-        </div>
-        <p className="mt-2 text-xs font-semibold leading-snug flex items-start gap-1.5">
-          {qualifies ? (
-            <>
-              <Check className="w-4 h-4 shrink-0 text-amber-300" />
-              <span>¡Tu cotización ya califica! Déjanos tus datos para reservar tu hielera.</span>
-            </>
-          ) : artiqTotal > 0 ? (
-            <span>
-              Te faltan <strong className="text-amber-300">{formatCOP(missing)}</strong> en equipos Artiq para superar los $4.000.000 y ganarla.
+        <div className="relative bg-black/20 backdrop-blur-sm px-5 py-3.5 border-t border-white/10">
+          <div className="flex items-center justify-between text-[11px] font-semibold text-white/80 mb-1.5">
+            <span>Tu cotización Artiq</span>
+            <span className="tabular-nums">
+              {formatCOP(artiqTotal)} <span className="text-white/50">/ $4.000.000</span>
             </span>
-          ) : (
-            <span>Agrega granizadoras, máquinas de hielo o dispensadores Artiq para participar.</span>
-          )}
-        </p>
-      </div>
+          </div>
+          <div
+            className="h-2.5 rounded-full bg-white/15 overflow-hidden"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={progress}
+            aria-label="Avance hacia la hielera gratis"
+          >
+            <div
+              className={`h-full rounded-full transition-all duration-700 ${
+                qualifies ? 'bg-gradient-to-r from-amber-300 to-amber-400' : 'bg-gradient-to-r from-artiq-100 to-white'
+              }`}
+              style={{ width: `${Math.max(progress, artiqTotal > 0 ? 4 : 0)}%` }}
+            />
+          </div>
+          <p className="mt-2 text-xs font-semibold leading-snug flex items-start gap-1.5">
+            {qualifies ? (
+              <>
+                <Check className="w-4 h-4 shrink-0 text-amber-300" />
+                <span>¡Tu cotización ya califica! Déjanos tus datos para reservar tu hielera.</span>
+              </>
+            ) : artiqTotal > 0 ? (
+              <span>
+                Te faltan <strong className="text-amber-300">{formatCOP(missing)}</strong> en equipos Artiq para superar los $4.000.000 y ganarla.
+              </span>
+            ) : (
+              <span>Agrega granizadoras, máquinas de hielo o dispensadores Artiq para participar.</span>
+            )}
+          </p>
+        </div>
+        </>
+      )}
     </section>
   );
 }
