@@ -3,6 +3,7 @@ import { RequestedProductItem, Product } from '../types';
 import { PRODUCTS } from '../data';
 import { isWordPress } from '../wordpress';
 import { Trash2, ShoppingBag, Send, ArrowRight, Building2, User, Mail, Phone, MapPin, AlignLeft, CheckCircle2, MessageCircle } from 'lucide-react';
+import PromoHielera from './PromoHielera';
 
 interface QuoteBuilderProps {
   quoteItems: RequestedProductItem[];
@@ -72,6 +73,12 @@ export default function QuoteBuilder({
   };
 
   const { oneTimeTotal, rentingMonthlyTotal } = calculateTotals();
+
+  // Promoción: total cotizado en equipos Artiq (para la hielera gratis).
+  const artiqTotal = quoteItems.reduce((sum, item) => {
+    const prod = getProductDetails(item.productId);
+    return prod && prod.brand === 'artiq' ? sum + prod.price * item.quantity : sum;
+  }, 0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -295,6 +302,11 @@ export default function QuoteBuilder({
       {/* FORM LEAD SUBMISSION (Right 5 Columns) */}
       <div className="lg:col-span-5">
         <form id="quote-form" onSubmit={handleSubmit} className="relative scroll-mt-32 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-4">
+          {/* PROMOCIÓN: motiva a dejar los datos */}
+          <div className="-mx-1 -mt-1">
+            <PromoHielera artiqTotal={artiqTotal} />
+          </div>
+
           <h3 className="text-lg font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center gap-2">
             <User className="w-5 h-5 text-amber-700" />
             Tus datos de contacto
