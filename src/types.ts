@@ -6,6 +6,8 @@ export interface Product {
   description: string;
   price: number; // Precio que paga el cliente (con descuento si lo hay), COP
   regularPrice?: number; // Precio full antes del descuento (se muestra tachado)
+  sourceStore?: 'artiq' | 'distrito'; // Tienda de donde se sincroniza el precio
+  sourceSku?: string; // SKU del producto en esa tienda
   rentalPrice?: number; // Renting opcional desactivado
   specs: string[];
   features: { label: string; value: string }[];

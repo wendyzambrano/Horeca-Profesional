@@ -4,6 +4,8 @@ export const PRODUCTS: Product[] = [
   // --- MUNDO ARTIQ (Frío y dispensación) ---
   {
     id: 'artiq-disp-3t-aspas',
+    sourceStore: 'artiq',
+    sourceSku: 'MAQ050403-007',
     brand: 'artiq',
     category: 'dispensador',
     name: 'Maquina dispensadora de bebidas 3 tanques con aspas',
@@ -53,6 +55,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'artiq-disp-2t-aspas',
+    sourceStore: 'artiq',
+    sourceSku: 'MAQ0089',
     brand: 'artiq',
     category: 'dispensador',
     name: 'Dispensador de Jugo 2 tanques con Aspas',
@@ -99,6 +103,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'artiq-disp-3t-agitacion',
+    sourceStore: 'artiq',
+    sourceSku: 'MAQ0044',
     brand: 'artiq',
     category: 'dispensador',
     name: 'Dispensador de Bebidas Frías 10 Litros x3 Tanques',
@@ -144,6 +150,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'artiq-disp-2t-agitacion',
+    sourceStore: 'artiq',
+    sourceSku: 'MAQ0043',
     brand: 'artiq',
     category: 'dispensador',
     name: 'Dispensador de Bebidas Frías 10 litros x2 Tanques',
@@ -189,6 +197,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'artiq-gran-2',
+    sourceStore: 'artiq',
+    sourceSku: 'MAQ0052',
     brand: 'artiq',
     category: 'granizadora',
     name: 'Máquina de Granizados Artiq 12 Litros',
@@ -225,6 +235,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'artiq-gran-3',
+    sourceStore: 'artiq',
+    sourceSku: 'MAQ0054',
     brand: 'artiq',
     category: 'granizadora',
     name: 'Máquina Granizadora Artiq 2 Tanques (24 Litros)',
@@ -259,6 +271,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'artiq-ice-45',
+    sourceStore: 'artiq',
+    sourceSku: 'MAQ0055',
     brand: 'artiq',
     category: 'granizadora',
     name: 'Máquina Granizadora Artiq 12 Litros x 3 Tanques',
@@ -292,6 +306,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'artiq-ice-455',
+    sourceStore: 'artiq',
+    sourceSku: 'MAQ080103-004',
     brand: 'artiq',
     category: 'hielo',
     name: 'Máquina de Hielo Industrial 455 Kg',
@@ -351,6 +367,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'artiq-ice-110',
+    sourceStore: 'artiq',
+    sourceSku: 'MAQ080103-016',
     brand: 'artiq',
     category: 'hielo',
     name: 'Máquina de Hielo en Escamas 1500kg',
@@ -384,6 +402,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'artiq-disp-4',
+    sourceStore: 'artiq',
+    sourceSku: 'MAQ080103-014',
     brand: 'artiq',
     category: 'hielo',
     name: 'Máquina de Hielo en Cubos 900kg',
@@ -429,6 +449,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'artiq-disp-juice',
+    sourceStore: 'artiq',
+    sourceSku: 'MAQ080103-015',
     brand: 'artiq',
     category: 'hielo',
     name: 'Máquina de Hielo en Escamas 800kg',
@@ -473,6 +495,8 @@ export const PRODUCTS: Product[] = [
   // --- MUNDO BARÍSTICO (Café y molienda) ---
   {
     id: 'bar-bravetto-barista-master',
+    sourceStore: 'distrito',
+    sourceSku: 'MAQ090405-001',
     brand: 'baristico',
     category: 'cafe',
     name: 'Máquina de Espresso Barista Máster',
@@ -517,6 +541,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'bar-cafe-2g',
+    sourceStore: 'distrito',
+    sourceSku: 'MAQ051322-001',
     brand: 'baristico',
     category: 'cafe',
     name: 'Bravetto Máquina Espresso Automática',
@@ -554,6 +580,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'bar-cafe-3g',
+    sourceStore: 'distrito',
+    sourceSku: 'MAQ051311-001',
     brand: 'carimali',
     category: 'cafe',
     name: 'Carimali Nimble 2 GR',
@@ -627,6 +655,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'bar-grind-onix',
+    sourceStore: 'distrito',
+    sourceSku: 'MAQ090805-001',
     brand: 'baristico',
     category: 'molino',
     name: 'Barístico Molino Onix Pro',
@@ -659,6 +689,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'bar-eureka-drogheria',
+    sourceStore: 'distrito',
+    sourceSku: 'MAQ090309-003',
     brand: 'eureka',
     category: 'molino',
     name: 'Molino Eureka Drogheria Profesional',
@@ -695,6 +727,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'bar-eureka-mignon-filtro',
+    sourceStore: 'distrito',
+    sourceSku: 'MAQ090309-002',
     brand: 'eureka',
     category: 'molino',
     name: 'Molino Mignon Filtro 50MM Eureka',
@@ -730,6 +764,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'bar-eureka-mignon-zero',
+    sourceStore: 'distrito',
+    sourceSku: 'MAQ0069',
     brand: 'eureka',
     category: 'molino',
     name: 'Molino Mignon Zero Eureka',

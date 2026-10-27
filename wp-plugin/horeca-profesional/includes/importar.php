@@ -171,6 +171,10 @@ function horeca_run_import($overwrite = false, $download_imgs = true) {
             update_post_meta($post_id, '_horeca_cap_comfort_max', isset($cap['comfortMax']) ? (int) $cap['comfortMax'] : '');
             update_post_meta($post_id, '_horeca_cap_max', isset($cap['max']) ? (int) $cap['max'] : '');
             update_post_meta($post_id, '_horeca_cap_ideal', sanitize_text_field($cap['idealFor'] ?? ''));
+            if (!empty($item['sourceStore']) && !empty($item['sourceSku'])) {
+                update_post_meta($post_id, '_horeca_source_store', sanitize_key($item['sourceStore']));
+                update_post_meta($post_id, '_horeca_source_sku', sanitize_text_field($item['sourceSku']));
+            }
             update_post_meta($post_id, '_horeca_image_url', esc_url_raw($item['image'] ?? ''));
             update_post_meta($post_id, '_horeca_gallery_urls', array_values(array_filter(array_map('esc_url_raw', (array) ($item['gallery'] ?? [])))));
 

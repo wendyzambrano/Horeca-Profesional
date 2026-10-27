@@ -170,6 +170,11 @@ function horeca_render_metabox($post) {
     $cap_cmax = get_post_meta($post->ID, '_horeca_cap_comfort_max', true);
     $cap_max  = get_post_meta($post->ID, '_horeca_cap_max', true);
     $cap_idea = get_post_meta($post->ID, '_horeca_cap_ideal', true);
+    $src      = function_exists('horeca_product_source') ? horeca_product_source($post->ID) : null;
+    $src_store_meta = get_post_meta($post->ID, '_horeca_source_store', true);
+    $src_store = $src_store_meta !== '' ? $src_store_meta : ($src['store'] ?? '');
+    $src_sku   = get_post_meta($post->ID, '_horeca_source_sku', true) ?: ($src['sku'] ?? '');
+    $manual    = get_post_meta($post->ID, '_horeca_price_manual', true) === '1';
     ?>
     <p style="margin-top:0">El producto aparece en la app solo si tiene <strong>Marca</strong> y <strong>Tipo de equipo</strong>. El nombre, el precio, la descripción y las imágenes se toman de los campos normales de WooCommerce.</p>
     <table class="form-table" role="presentation">
@@ -245,6 +250,21 @@ function horeca_render_metabox($post) {
                 <p class="description">Solo para cafeteras. El simulador de rentabilidad no deja pasar del máximo. Déjalo vacío si no aplica.</p>
             </td>
         </tr>
+        <tr>
+            <th>Sincronización de precio</th>
+            <td>
+                <select name="horeca_source_store">
+                    <option value="none" <?php selected($src_store === 'none' || $src_store === ''); ?>>— No sincronizar —</option>
+                    <?php foreach (horeca_price_sources() as $key => $s) : ?>
+                        <option value="<?php echo esc_attr($key); ?>" <?php selected($src_store, $key); ?>><?php echo esc_html($s['label']); ?></option>
+                    <?php endforeach; ?>
+                </select>
+                SKU en la tienda
+                <input type="text" name="horeca_source_sku" value="<?php echo esc_attr($src_sku); ?>" class="regular-text" placeholder="Ej. MAQ0089">
+                <p><label><input type="checkbox" name="horeca_price_manual" value="1" <?php checked($manual); ?>> <strong>Precio manual</strong>: no actualizar este precio con la tienda</label></p>
+                <p class="description">Cada día se copian el precio full y el precio con descuento de la tienda elegida, buscando por SKU.</p>
+            </td>
+        </tr>
         <?php if ($app_id) : ?>
         <tr>
             <th>ID en la app</th>
@@ -301,6 +321,11 @@ add_action('save_post_product', function ($post_id) {
         update_post_meta($post_id, '_horeca_cap_' . $k, $v === '' ? '' : max(0, (int) $v));
     }
     update_post_meta($post_id, '_horeca_cap_ideal', sanitize_text_field(wp_unslash($_POST['horeca_cap_ideal'] ?? '')));
+
+    $store = sanitize_key(wp_unslash($_POST['horeca_source_store'] ?? 'none'));
+    update_post_meta($post_id, '_horeca_source_store', (function_exists('horeca_price_sources') && isset(horeca_price_sources()[$store])) ? $store : 'none');
+    update_post_meta($post_id, '_horeca_source_sku', sanitize_text_field(wp_unslash($_POST['horeca_source_sku'] ?? '')));
+    update_post_meta($post_id, '_horeca_price_manual', !empty($_POST['horeca_price_manual']) ? '1' : '');
 
     update_post_meta($post_id, '_horeca_image_url', esc_url_raw(wp_unslash($_POST['horeca_image_url'] ?? '')));
     update_post_meta($post_id, '_horeca_gallery_urls', array_values(array_filter(array_map('esc_url_raw', $lines('horeca_gallery_urls')))));
