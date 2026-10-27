@@ -7,6 +7,7 @@ import ProfitabilityCalculator from './components/ProfitabilityCalculator';
 import QuoteBuilder from './components/QuoteBuilder';
 import WorldCategoryBar from './components/WorldCategoryBar';
 import QuotePopup from './components/QuotePopup';
+import AddedToQuoteDialog from './components/AddedToQuoteDialog';
 import { 
   Building2, ShoppingCart, Calculator, 
   Sparkles, Snowflake, Coffee, Layers, ChevronRight, HelpCircle, Info, CheckCircle, ChevronDown,
@@ -258,6 +259,26 @@ export default function App() {
 
   // Botón "Solicitar Cotización" de la ficha: agrega el equipo (sin duplicarlo),
   // cierra la ficha y lleva a la pestaña de cotización, mostrando el formulario.
+  // Botón "Cotizar" de las tarjetas: agrega el equipo (sin duplicarlo) y pregunta
+  // si quiere seguir agregando productos o solicitar la cotización.
+  const [justAddedId, setJustAddedId] = useState<string | null>(null);
+  const handleCardQuote = (productId: string) => {
+    if (!quoteItems.some(item => item.productId === productId)) {
+      handleAddToQuote(productId, 'purchase');
+    }
+    setJustAddedId(productId);
+  };
+  const closeAddedDialog = React.useCallback(() => setJustAddedId(null), []);
+  const goToQuoteForm = () => {
+    setJustAddedId(null);
+    navigateToView('quote');
+    window.setTimeout(() => {
+      if (window.innerWidth < 1024) {
+        document.getElementById('quote-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 350);
+  };
+
   const handleRequestQuote = (productId: string) => {
     if (!quoteItems.some(item => item.productId === productId)) {
       handleAddToQuote(productId, 'purchase');
@@ -897,7 +918,7 @@ export default function App() {
                       <ProductCard
                         key={prod.id}
                         product={prod}
-                        onAddToQuote={handleAddToQuote}
+                        onAddToQuote={handleCardQuote}
                         isInQuote={isInQuote}
                         onOpenDetails={(p) => setSelectedDetailProduct(p)}
                       />
@@ -992,7 +1013,15 @@ export default function App() {
 
       {/* Product Detail Modal (Web Catalog Quick Info) */}
       {/* Pop up de cotización (aparece una vez por visita) */}
-      <QuotePopup suppressed={currentView === 'quote' || Boolean(selectedDetailProduct)} />
+      <QuotePopup suppressed={currentView === 'quote' || Boolean(selectedDetailProduct) || Boolean(justAddedId)} />
+
+      {/* Aviso al tocar "Cotizar" en una tarjeta */}
+      <AddedToQuoteDialog
+        product={justAddedId ? PRODUCTS.find(p => p.id === justAddedId) ?? null : null}
+        itemsCount={quoteItems.length}
+        onKeepShopping={closeAddedDialog}
+        onRequestQuote={goToQuoteForm}
+      />
 
       <ProductDetailModal
         product={selectedDetailProduct}
