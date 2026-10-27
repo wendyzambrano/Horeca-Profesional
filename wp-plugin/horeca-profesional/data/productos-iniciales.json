@@ -5,7 +5,8 @@
     "category": "dispensador",
     "name": "Maquina dispensadora de bebidas 3 tanques con aspas",
     "description": "Dispensadora de bebidas profesional refrigerada de 3 tanques con sistema de aspas giratorias (Referencia: MAQ050403-007). Equipada con 3 depósitos independientes de 15 litros cada uno (45 litros de capacidad total), compresor Wanbao de alto rendimiento, estructura en acero inoxidable 303 y refrigerante ecológico R290. Diseñada para pulverizar, mezclar y refrigerar bebidas continuas entre 7°C y 12°C.",
-    "price": 3549900,
+    "price": 2749900,
+    "regularPrice": 3247900,
     "image": "https://artiq.com.co/wp-content/uploads/2026/09/dispensador-de-aspas-3T-lateral-3-4.webp",
     "specs": [
       "Referencia: MAQ050403-007",
@@ -71,7 +72,8 @@
     "category": "dispensador",
     "name": "Dispensador de Jugo 2 tanques con Aspas",
     "description": "Dispensadora de bebidas profesional refrigerada de 2 tanques con sistema de aspas giratorias (Referencia: MAQ0089). Cuenta con 2 depósitos de policarbonato de 18 litros cada uno (36 litros de capacidad total), compresor Embraco de alto desempeño, estructura en acero inoxidable 303 y refrigerante R290. Especialmente formulada y recomendada para bebidas a base de leche, jugos y néctares continuos entre 7°C y 12°C.",
-    "price": 3149900,
+    "price": 2459900,
+    "regularPrice": 2998450,
     "image": "https://artiq.com.co/wp-content/uploads/2025/12/MAQ0089-DISPENSADOR-DE-JUGO-CON-ASPAS-2-6-1-2.webp",
     "specs": [
       "Referencia: MAQ0089",
@@ -134,7 +136,8 @@
     "category": "dispensador",
     "name": "Dispensador de Bebidas Frías 10 Litros x3 Tanques",
     "description": "Dispensadora de bebidas profesional refrigerada de 3 tanques con sistema de bomba de agitación (Referencia: MAQ0044). Cuenta con 3 depósitos de policarbonato de 10 litros cada uno (30 litros de capacidad total), compresor Zel de alto rendimiento, estructura en acero inoxidable 303 y refrigerante R134A. Diseñada para agitar y refrigerar bebidas entre 7°C y 12°C con funcionamiento silencioso, ahorro de energía y sistema corta gotera.",
-    "price": 3400000,
+    "price": 2794000,
+    "regularPrice": 3145700,
     "image": "https://artiq.com.co/wp-content/uploads/2025/12/BON6856.jpg",
     "specs": [
       "Referencia: MAQ0044",
@@ -196,7 +199,8 @@
     "category": "dispensador",
     "name": "Dispensador de Bebidas Frías 10 litros x2 Tanques",
     "description": "Dispensadora de bebidas profesional refrigerada de 2 tanques con sistema de bomba de agitación (Referencia: MAQ0043). Equipada con 2 depósitos independientes de 10 litros de policarbonato (20 litros de capacidad total), compresor Zel de alta eficiencia, estructura en acero inoxidable 303 y refrigerante ecológico R134A. Diseñada para agitar y refrigerar bebidas entre 7°C y 12°C con funcionamiento ultra silencioso, ahorro de energía y sistema corta gotera.",
-    "price": 2700000,
+    "price": 1600000,
+    "regularPrice": 2348901,
     "image": "https://artiq.com.co/wp-content/uploads/2025/12/BON6891.jpg",
     "specs": [
       "Referencia: MAQ0043",
@@ -258,7 +262,8 @@
     "category": "granizadora",
     "name": "Máquina de Granizados Artiq 12 Litros",
     "description": "Máquina granizadora profesional con 1 depósito de 12 litros. Perfecta para locales comerciales, bares o cafeterías que quieren incorporar granizados premium optimizando el espacio en barra. Sistema de control electrónico inteligente de consistencia.",
-    "price": 5099000,
+    "price": 4323729,
+    "regularPrice": 5099000,
     "image": "https://artiq.com.co/wp-content/uploads/2025/12/maquina-granizado-un-tanque-compacta.webp",
     "specs": [
       "Capacidad: 1 x 12 Litros",
@@ -305,7 +310,8 @@
     "category": "granizadora",
     "name": "Máquina Granizadora Artiq 2 Tanques (24 Litros)",
     "description": "Máquina granizadora profesional con 2 depósitos de 12 litros cada uno (24L en total). Equipada con compresores independientes por tanque y sistema de control de densidad electrónico inteligente.",
-    "price": 6229000,
+    "price": 4989900,
+    "regularPrice": 5879899,
     "image": "https://artiq.com.co/wp-content/uploads/2025/12/Granizadora-2-Tanques-Profesional.webp",
     "specs": [
       "Capacidad: 2 x 12 Litros (24L)",
@@ -350,7 +356,8 @@
     "category": "granizadora",
     "name": "Máquina Granizadora Artiq 12 Litros x 3 Tanques",
     "description": "La granizadora de máxima potencia y capacidad con 3 depósitos de 12 litros (36L en total). Ideal para negocios de alto tráfico, chiringuitos, terrazas y discotecas de gran afluencia.",
-    "price": 8839000,
+    "price": 6799900,
+    "regularPrice": 8194900,
     "image": "https://artiq.com.co/wp-content/uploads/2025/12/Granizadora-3-Tanques-Profesional-36-Litros.webp",
     "specs": [
       "Capacidad: 3 x 12 Litros (36L)",
@@ -394,7 +401,8 @@
     "category": "hielo",
     "name": "Máquina de Hielo Industrial 455 Kg",
     "description": "Fabricadora de hielo industrial en cubos de alta eficiencia (Referencia: MAQ080103-004). Produce hasta 455 kg de hielo en 24 horas con una tolva de almacenamiento integrada de hasta 315 kg. Equipada con potente compresor Shanghai Highly de 3000 W, condensador de tubo de cobre y aletas de aluminio, pantalla digital de diagnóstico, ciclo rápido de 13 a 20 minutos (380 cubos por ciclo de 22 mm), autolimpieza y modo de ahorro de energía.",
-    "price": 27976000,
+    "price": 25199900,
+    "regularPrice": 27976000,
     "image": "https://artiq.com.co/wp-content/uploads/2026/07/hilera-455kg-1.webp",
     "specs": [
       "Referencia: MAQ080103-004",
@@ -470,7 +478,8 @@
     "category": "hielo",
     "name": "Máquina de Hielo en Escamas 1500kg",
     "description": "Fabricadora de hielo industrial de alta eficiencia, genera hasta 1500 kg de hielo en escama en 24 horas. Equipada con compresor Copeland, sensores de nivel y estructura robusta de acero inoxidable.",
-    "price": 67499900,
+    "price": 60999900,
+    "regularPrice": 67499900,
     "image": "https://artiq.com.co/wp-content/uploads/2026/05/maquina-hielo-1500kg-escama.webp",
     "specs": [
       "Producción diaria: Hasta 1500 Kg / 24 horas",
@@ -514,7 +523,8 @@
     "category": "hielo",
     "name": "Máquina de Hielo en Cubos 900kg",
     "description": "Fabricadora de hielo industrial en cubos de alta eficiencia. Genera hasta 900 kg de hielo en cubos de 22 mm en 24 horas. Equipada con compresor Shanghai Highly, estructura de acero inoxidable y funciones inteligentes.",
-    "price": 46800000,
+    "price": 44997800,
+    "regularPrice": 46800000,
     "image": "https://artiq.com.co/wp-content/uploads/2026/05/maquina-de-hielo-900kg-tapa-cerrada.webp",
     "specs": [
       "Producción diaria: Hasta 900 Kg / 24 horas",
@@ -573,7 +583,8 @@
     "category": "hielo",
     "name": "Máquina de Hielo en Escamas 800kg",
     "description": "Fabricadora de hielo industrial en escamas de alta eficiencia (Referencia: MAQ080103-015). Genera hasta 800 kg de hielo en 24 horas. Equipada con compresor Shanghai Highly, estructura de acero inoxidable, sensores inteligentes y funciones avanzadas.",
-    "price": 41399900,
+    "price": 36990000,
+    "regularPrice": 41399900,
     "image": "https://artiq.com.co/wp-content/uploads/2026/05/hielera-800kg-perfil.webp",
     "specs": [
       "Producción diaria: Hasta 800 Kg / 24 horas",
@@ -629,7 +640,8 @@
     "category": "cafe",
     "name": "Máquina de Espresso Barista Máster",
     "description": "Máquina de espresso semi-profesional de alta precisión Bravetto Barista Máster (Referencia: MAQ090405-001). Equipada con bomba italiana ULKA de 19 bares con manómetro integrado, sistema de calentamiento por termobloque de 1600 W, portafiltro profesional de 58 mm y molino integrado con muelas de acero y 214° de ajuste. Incorpora gramera digital integrada, control de temperatura PID (90°C a 96°C), lanceta de vapor en 3 niveles, preinfusión y función de agua caliente integrada.",
-    "price": 2799900,
+    "price": 2299900,
+    "regularPrice": 2799900,
     "image": "https://distritocafetero.com/wp-content/uploads/2026/04/Maquina-espresso-01.webp",
     "specs": [
       "Referencia: MAQ090405-001",
@@ -696,6 +708,7 @@
     "name": "Bravetto Máquina Espresso Automática",
     "description": "Máquina espresso superautomática premium de alta precisión (Referencia: MAQ051322-001 - Color Negro) de la línea Bravetto Café & Bar. Equipada con pantalla HD táctil de 10.1 pulgadas para preparar automáticamente hasta 16 tipos de de bebidas, molino integrado de muelas cónicas de acero con 7 niveles de molienda y bomba Ulka Italiana de 19 bares.",
     "price": 5999900,
+    "regularPrice": 6899900,
     "image": "https://distritocafetero.com/wp-content/uploads/2026/06/maquina-espresso-bravetto-05.webp",
     "specs": [
       "Preparaciones: Hasta 16 tipos de bebidas de café y leche",
@@ -751,7 +764,8 @@
     "category": "cafe",
     "name": "Carimali Nimble 2 GR",
     "description": "Máquina espresso profesional tradicional de dos grupos (2 GR) en color negro, ideal para cafeterías con ritmo de servicio medio-alto. Combina un diseño exclusivo, elegante y compacto con una caldera de cobre de 11 litros con intercambiadores de calor para extracción continua de espresso. Hecha por Carimali, marca italiana premium con más de 100 años de trayectoria.",
-    "price": 13999999,
+    "price": 13500000,
+    "regularPrice": 15400000,
     "image": "https://distritocafetero.com/wp-content/uploads/2026/03/CarimaliNegra-02.webp",
     "specs": [
       "Grupos de erogación: 2 grupos de café",
@@ -855,7 +869,8 @@
     "category": "molino",
     "name": "Barístico Molino Onix Pro",
     "description": "Molino de café profesional Onix Pro de diseño compacto y alta precisión. Equipado con muelas cónicas de 58 mm de acero inoxidable, ajuste de molienda de 30 a 60 niveles y control de tiempo personalizable de 0 a 50 segundos. Diseñado con doble protección contra sobrecargas y sistema antiestático que evita la dispersión del café molido.",
-    "price": 549900,
+    "price": 459900,
+    "regularPrice": 639900,
     "image": "https://distritocafetero.com/wp-content/uploads/2026/03/molino-cafe-onyx.webp",
     "specs": [
       "Dimensiones (An x Al x Pr): 149 x 341.5 x 212 mm",

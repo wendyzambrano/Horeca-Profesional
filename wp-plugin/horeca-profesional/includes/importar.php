@@ -47,6 +47,46 @@ function horeca_sideload_image($url, $post_id, $title) {
     return is_wp_error($id) ? 0 : (int) $id;
 }
 
+/** Precio full como precio normal y el de descuento como precio de oferta. */
+function horeca_apply_prices($product, $item) {
+    $sale    = (float) ($item['price'] ?? 0);
+    $regular = isset($item['regularPrice']) ? (float) $item['regularPrice'] : 0;
+    if ($regular > $sale && $sale > 0) {
+        $product->set_regular_price((string) $regular);
+        $product->set_sale_price((string) $sale);
+    } else {
+        $product->set_regular_price((string) $sale);
+        $product->set_sale_price('');
+    }
+    $product->set_date_on_sale_from(null);
+    $product->set_date_on_sale_to(null);
+}
+
+/**
+ * Actualiza solo los precios (normal y de oferta) de los productos ya importados,
+ * con los del catálogo de la app. No toca nombres, fotos, textos ni fichas.
+ *
+ * @return array{updated:int,missing:string[]}
+ */
+function horeca_update_prices() {
+    $result = ['updated' => 0, 'missing' => []];
+    $file   = HORECA_PATH . 'data/productos-iniciales.json';
+    $items  = file_exists($file) ? json_decode((string) file_get_contents($file), true) : [];
+    foreach ((array) $items as $item) {
+        $pid = horeca_find_product_by_app_id(sanitize_key($item['id'] ?? ''));
+        $product = $pid ? wc_get_product($pid) : null;
+        if (!$product) {
+            $result['missing'][] = (string) ($item['name'] ?? '');
+            continue;
+        }
+        horeca_apply_prices($product, $item);
+        $product->save();
+        $result['updated']++;
+    }
+    do_action('litespeed_purge_all');
+    return $result;
+}
+
 /**
  * Ejecuta la importación.
  *
@@ -93,7 +133,7 @@ function horeca_run_import($overwrite = false, $download_imgs = true) {
 
             $product->set_name(sanitize_text_field($item['name']));
             $product->set_description(wp_kses_post($item['description'] ?? ''));
-            $product->set_regular_price((string) (float) ($item['price'] ?? 0));
+            horeca_apply_prices($product, $item);
             $product->set_status('publish');
             $product->set_catalog_visibility('visible');
             $product->set_menu_order((int) $index);

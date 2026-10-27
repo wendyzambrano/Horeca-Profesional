@@ -38,6 +38,17 @@ add_action('admin_post_horeca_importar', function () {
     exit;
 });
 
+/** Procesa el botón "Actualizar precios". */
+add_action('admin_post_horeca_precios', function () {
+    if (!current_user_can('manage_woocommerce')) {
+        wp_die('No tienes permiso para hacer esto.');
+    }
+    check_admin_referer('horeca_precios');
+    set_transient('horeca_precios_result_' . get_current_user_id(), horeca_update_prices(), 5 * MINUTE_IN_SECONDS);
+    wp_safe_redirect(admin_url('admin.php?page=horeca-app&precios=1#precios'));
+    exit;
+});
+
 /** Procesa el botón "Crear la página de la app y ponerla como inicio". */
 add_action('admin_post_horeca_crear_pagina', function () {
     if (!current_user_can('manage_options')) {
@@ -154,6 +165,27 @@ function horeca_render_admin_page() {
             <p><label><input type="checkbox" name="download_images" value="1" checked> Descargar la imagen principal de cada producto a la biblioteca de medios (tarda 1–2 minutos)</label></p>
             <p><label><input type="checkbox" name="overwrite" value="1"> Sobrescribir productos que ya fueron importados <em>(se pierden los cambios hechos en WooCommerce)</em></label></p>
             <?php submit_button('Importar productos', 'primary', 'submit', false); ?>
+        </form>
+
+        <h2 id="precios">Actualizar precios</h2>
+        <?php
+        if (!empty($_GET['precios'])) {
+            $pr = get_transient('horeca_precios_result_' . get_current_user_id());
+            delete_transient('horeca_precios_result_' . get_current_user_id());
+            if ($pr) {
+                echo '<div class="notice notice-success inline"><p><strong>Precios actualizados</strong> en ' . (int) $pr['updated'] . ' productos.';
+                if (!empty($pr['missing'])) {
+                    echo ' No se encontraron: ' . esc_html(implode(', ', $pr['missing'])) . '.';
+                }
+                echo '</p></div>';
+            }
+        }
+        ?>
+        <p>Pone en cada producto de la app el <strong>precio full</strong> (precio normal) y el <strong>precio con descuento</strong> (precio de oferta) del catálogo de esta versión del plugin. Solo cambia los precios; nombres, fotos y textos quedan igual.</p>
+        <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+            <?php wp_nonce_field('horeca_precios'); ?>
+            <input type="hidden" name="action" value="horeca_precios">
+            <?php submit_button('Actualizar precios', 'primary', 'submit', false); ?>
         </form>
 
         <h2>Paso 2 · Mostrar la app en una página</h2>

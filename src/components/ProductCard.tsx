@@ -161,6 +161,13 @@ export default function ProductCard({
           {/* Price & Action Buttons */}
           <div className="mt-3 pt-2.5 border-t border-gray-100">
             <div className="mb-2">
+              {product.regularPrice && product.regularPrice > product.price && (
+                <div className="flex items-center gap-1.5 leading-none mb-0.5">
+                  <span className="text-[10px] sm:text-xs text-gray-400 line-through tabular-nums">
+                    ${product.regularPrice.toLocaleString('es-CO')}
+                  </span>
+                </div>
+              )}
               <div className="flex items-baseline">
                 <span className={`text-sm sm:text-lg font-black tracking-tight ${
                   isArtiq ? 'text-artiq-600' : 'text-[#8b5e3c]'

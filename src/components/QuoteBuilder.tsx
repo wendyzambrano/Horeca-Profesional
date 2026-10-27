@@ -258,6 +258,11 @@ export default function QuoteBuilder({
                       {/* Total price for this item */}
                       <div className="text-right min-w-[70px]">
                         <span className="block text-xs text-gray-400 font-medium">Subtotal</span>
+                        {prod.regularPrice && prod.regularPrice > prod.price && (
+                          <span className="block text-[11px] text-gray-400 line-through font-mono">
+                            ${(prod.regularPrice * item.quantity).toLocaleString('es-CO')}
+                          </span>
+                        )}
                         <span className="font-bold text-sm font-mono text-gray-900">
                           ${(prod.price * item.quantity).toLocaleString('es-CO')} COP
                         </span>

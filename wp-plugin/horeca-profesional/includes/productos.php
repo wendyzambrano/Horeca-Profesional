@@ -104,6 +104,9 @@ function horeca_product_to_app($product) {
         'name'        => $product->get_name(),
         'description' => $description,
         'price'       => (float) ($product->get_price() !== '' ? $product->get_price() : 0),
+        'regularPrice' => ($product->is_on_sale() && (float) $product->get_regular_price() > (float) $product->get_price())
+            ? (float) $product->get_regular_price()
+            : null,
         'specs'       => array_values(array_filter(array_map('strval', (array) get_post_meta($id, '_horeca_specs', true)))),
         'features'    => horeca_clean_features(get_post_meta($id, '_horeca_features', true)),
         'rating'      => $rating !== '' ? (float) $rating : 4.5,
@@ -112,6 +115,9 @@ function horeca_product_to_app($product) {
         'permalink'   => get_permalink($id),
         'inStock'     => $product->is_in_stock(),
     ];
+    if ($item['regularPrice'] === null) {
+        unset($item['regularPrice']);
+    }
     if ($rental !== '' && (float) $rental > 0) {
         $item['rentalPrice'] = (float) $rental;
     }

@@ -315,9 +315,20 @@ export default function ProductDetailModal({
               </p>
 
               {/* Price Display */}
-              <div className={`p-3.5 rounded-xl flex items-baseline justify-between border ${
+              <div className={`p-3.5 rounded-xl flex items-center justify-between border ${
                 isArtiq ? 'bg-slate-50 border-slate-100' : 'bg-[#f4f1e4] border-[#e8e0d4]'
               }`}>
+                <div>
+                {product.regularPrice && product.regularPrice > product.price && (
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-0.5">
+                    <span className="text-sm text-gray-400 line-through tabular-nums whitespace-nowrap">
+                      ${product.regularPrice.toLocaleString('es-CO')} COP
+                    </span>
+                    <span className="text-[11px] font-black text-white bg-red-500 rounded-md px-1.5 py-0.5 whitespace-nowrap">
+                      Ahorras ${(product.regularPrice - product.price).toLocaleString('es-CO')}
+                    </span>
+                  </div>
+                )}
                 <div className="flex items-baseline">
                   <span className={`text-2xl sm:text-3xl font-black tracking-tight ${
                     isArtiq ? 'text-artiq-600' : 'text-[#8b5e3c]'
@@ -325,6 +336,7 @@ export default function ProductDetailModal({
                     ${product.price.toLocaleString('es-CO')}
                   </span>
                   <span className="text-xs text-gray-400 font-semibold ml-1.5">COP</span>
+                </div>
                 </div>
 
                 <div className="text-right text-[11px] text-gray-500 font-medium hidden sm:block">
