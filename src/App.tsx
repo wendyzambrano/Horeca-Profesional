@@ -459,7 +459,15 @@ export default function App() {
                 }`}
                 title="Ir a Universo Artiq"
               >
-                <Snowflake className="w-3.5 h-3.5" />
+                <img
+                  src={currentView === 'catalog' && selectedBrand === 'artiq'
+                    ? 'https://artiq.com.co/wp-content/uploads/2026/08/isotipo-artiq-1.svg'
+                    : 'https://artiq.com.co/wp-content/uploads/2026/08/isotipo-artiq-2.svg'}
+                  alt=""
+                  aria-hidden="true"
+                  className="w-3.5 h-3.5 shrink-0 object-contain"
+                  referrerPolicy="no-referrer"
+                />
                 <span>Mundo Artiq</span>
               </a>
 
@@ -476,7 +484,15 @@ export default function App() {
                 }`}
                 title="Ir a Universo Barístico"
               >
-                <Coffee className="w-3.5 h-3.5" />
+                <img
+                  src={currentView === 'catalog' && selectedBrand === 'baristico'
+                    ? 'https://distritocafetero.com/wp-content/uploads/2026/08/Isotipo-baristico.1.svg'
+                    : 'https://distritocafetero.com/wp-content/uploads/2026/08/Isotipo-baristico.svg'}
+                  alt=""
+                  aria-hidden="true"
+                  className="w-3.5 h-3.5 shrink-0 object-contain"
+                  referrerPolicy="no-referrer"
+                />
                 <span>Mundo Barístico</span>
               </a>
 

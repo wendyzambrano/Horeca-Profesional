@@ -1,12 +1,10 @@
 import React from 'react';
-import { Snowflake, Coffee, LucideIcon } from 'lucide-react';
 
 type World = 'artiq' | 'baristico';
 
 interface CategoryButton {
   id: string;
   label: string;
-  icon: LucideIcon;
 }
 
 const WORLDS: Record<World, {
@@ -26,9 +24,9 @@ const WORLDS: Record<World, {
     watermark: 'https://artiq.com.co/wp-content/uploads/2026/08/isotipo-artiq-2.svg',
     name: 'Artiq',
     categories: [
-      { id: 'granizadora', label: 'Granizadoras', icon: Snowflake },
-      { id: 'hielo', label: 'Máquinas de Hielo', icon: Snowflake },
-      { id: 'dispensador', label: 'Dispensadores', icon: Snowflake },
+      { id: 'granizadora', label: 'Granizadoras' },
+      { id: 'hielo', label: 'Máquinas de Hielo' },
+      { id: 'dispensador', label: 'Dispensadores' },
     ],
     section: 'bg-artiq-50 border-artiq-100',
     tile: 'bg-artiq-500 shadow-artiq-500/30',
@@ -42,8 +40,8 @@ const WORLDS: Record<World, {
     watermark: 'https://distritocafetero.com/wp-content/uploads/2026/08/Isotipo-baristico.svg',
     name: 'Barístico',
     categories: [
-      { id: 'cafe', label: 'Cafeteras Espresso', icon: Coffee },
-      { id: 'molino', label: 'Molinos On-Demand', icon: Coffee },
+      { id: 'cafe', label: 'Cafeteras Espresso' },
+      { id: 'molino', label: 'Molinos On-Demand' },
     ],
     section: 'bg-[#f4f1e4] border-[#e8e0d4]',
     tile: 'bg-[#5b4638] shadow-[#5b4638]/30',
@@ -71,7 +69,7 @@ export default function WorldCategoryBar({ world, selectedCategory, onSelectCate
     <section
       id={`categorias-${world}`}
       aria-label={`Categorías ${w.name}`}
-      className={`relative overflow-hidden rounded-3xl border ${w.section} px-5 py-6 sm:px-8 sm:py-7`}
+      className={`relative overflow-hidden rounded-3xl border ${w.section} px-4 py-4 sm:px-8 sm:py-7`}
     >
       {/* Isotipo grande de fondo */}
       <img
@@ -83,12 +81,12 @@ export default function WorldCategoryBar({ world, selectedCategory, onSelectCate
       />
 
       <div className="relative flex flex-col md:flex-row items-center gap-5 md:gap-8">
-        {/* Isotipo */}
-        <div className={`shrink-0 w-16 h-16 sm:w-24 sm:h-24 rounded-[1.4rem] sm:rounded-[1.75rem] ${w.tile} shadow-xl flex items-center justify-center`}>
+        {/* Isotipo (solo escritorio; en móvil va en cada categoría) */}
+        <div className={`hidden md:flex shrink-0 w-24 h-24 rounded-[1.75rem] ${w.tile} shadow-xl items-center justify-center`}>
           <img
             src={w.isotipo}
             alt={`Isotipo ${w.name}`}
-            className="w-9 h-9 sm:w-14 sm:h-14 object-contain"
+            className="w-14 h-14 object-contain"
             referrerPolicy="no-referrer"
           />
         </div>
@@ -101,7 +99,7 @@ export default function WorldCategoryBar({ world, selectedCategory, onSelectCate
             w.categories.length === 3 ? 'grid-cols-3' : 'grid-cols-2'
           }`}
         >
-          {w.categories.map(({ id, label, icon: Icon }) => {
+          {w.categories.map(({ id, label }) => {
             const isActive = selectedCategory === id;
             return (
               <button
@@ -118,7 +116,13 @@ export default function WorldCategoryBar({ world, selectedCategory, onSelectCate
                     isActive ? 'bg-white/15 text-current' : w.iconIdle
                   }`}
                 >
-                  <Icon className="w-5 h-5" />
+                  <img
+                    src={isActive ? w.isotipo : w.watermark}
+                    alt=""
+                    aria-hidden="true"
+                    className="w-5 h-5 object-contain"
+                    referrerPolicy="no-referrer"
+                  />
                 </span>
                 <span className="text-xs sm:text-[15px] font-bold leading-tight">{label}</span>
               </button>

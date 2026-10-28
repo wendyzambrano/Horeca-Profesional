@@ -21,14 +21,72 @@ function horeca_email_settings() {
         'customer_subject' => 'Tu cotización Horeca Profesional {referencia}',
         'customer_body'    => horeca_default_customer_template(),
         'shop_url'         => 'https://artiq.com.co/',
-        'visit_text'       => 'Te esperamos en nuestro showroom para que conozcas los equipos en funcionamiento.',
+        'visit_text'       => 'Agenda tu visita a nuestro Centro de Experiencia y un asesor te mostrará los equipos en vivo.',
+        'visit_address'    => 'Carrera 43A # 15 sur 15, Local 102, Edificio Xerox, Medellín',
+        'visit_maps_url'   => 'https://www.google.com/maps/place/Edificio+Xerox/@6.1911458,-75.577042,17z/data=!3m1!4b1!4m6!3m5!1s0x8e4682619cf6c301:0x2cfd3d806e109e96!8m2!3d6.1911458!4d-75.577042!16s%2Fg%2F11b7pzmczw',
         'send_customer'    => 1,
     ];
     $saved = get_option('horeca_email_settings', []);
-    return array_merge($defaults, is_array($saved) ? $saved : []);
+    $saved = is_array($saved) ? $saved : [];
+    // Si el diseño guardado es el anterior por defecto (nadie lo cambió), se usa el nuevo.
+    if (isset($saved['customer_body']) && trim($saved['customer_body']) === trim(horeca_legacy_customer_template_v1())) {
+        unset($saved['customer_body']);
+    }
+    if (isset($saved['visit_text']) && $saved['visit_text'] === 'Te esperamos en nuestro showroom para que conozcas los equipos en funcionamiento.') {
+        unset($saved['visit_text']);
+    }
+    return array_merge($defaults, $saved);
 }
 
 function horeca_default_customer_template() {
+    return <<<'HTML'
+<div style="background:#f4f4f5;padding:24px 12px;font-family:Arial,Helvetica,sans-serif;color:#1f2937">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden">
+    <tr>
+      <td style="background:#111e2f;padding:28px 32px;color:#ffffff">
+        <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;opacity:.7">Horeca Profesional</div>
+        <div style="font-size:24px;font-weight:bold;margin-top:6px">Tu cotización está lista</div>
+        <div style="font-size:13px;opacity:.7;margin-top:6px">Referencia {referencia} · {fecha}</div>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:28px 32px">
+        <p style="font-size:16px;margin:0 0 12px">Hola {nombre},</p>
+        <p style="font-size:14px;line-height:1.6;margin:0 0 20px">Gracias por cotizar con nosotros. Estos son los equipos que seleccionaste:</p>
+        {productos}
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:0 32px 28px">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="background:#f4f1e4;border-radius:12px;padding:20px 22px">
+              <div style="font-size:16px;font-weight:bold;margin-bottom:6px">¿Quieres ver los equipos funcionando?</div>
+              <div style="font-size:13px;line-height:1.6">{visita}</div>
+              <div style="font-size:13px;line-height:1.6;margin-top:6px">📍 {direccion}</div>
+              <div style="font-size:12px;line-height:1.6;color:#6b7280;margin-top:6px">Lunes a viernes: 9:00 a. m. – 12:00 m. y 2:00 – 5:00 p. m. · Sábados: 8:30 – 11:30 a. m.</div>
+              <div style="margin-top:14px">{boton_visita}</div>
+            </td>
+          </tr>
+        </table>
+        <div style="text-align:center;margin-top:22px">
+          <div style="font-size:13px;color:#6b7280;margin-bottom:10px">¿Prefieres comprar en línea?</div>
+          {botones_tienda}
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td style="background:#f9fafb;padding:16px 32px;font-size:11px;color:#6b7280;text-align:center;line-height:1.5">
+        Precios en pesos colombianos (COP), sujetos a disponibilidad. Esta cotización es informativa.
+      </td>
+    </tr>
+  </table>
+</div>
+HTML;
+}
+
+/** Diseño por defecto anterior (para actualizarlo solo si nadie lo modificó). */
+function horeca_legacy_customer_template_v1() {
     return <<<'HTML'
 <div style="background:#f4f4f5;padding:24px 12px;font-family:Arial,Helvetica,sans-serif;color:#1f2937">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden">
@@ -200,8 +258,58 @@ function horeca_fill_template($template, $data) {
         '{productos}'  => horeca_items_table_html($data['items'], $data['total']),
         '{tienda}'     => esc_url($data['tienda']),
         '{visita}'     => wp_kses_post(nl2br($data['visita'])),
+        '{boton_visita}'   => horeca_email_button($data['visit_url'] ?? horeca_visit_url(), 'Programar visita al Centro de Experiencia', '#5b4638'),
+        '{enlace_visita}'  => esc_url($data['visit_url'] ?? horeca_visit_url()),
+        '{direccion}'      => horeca_address_html(),
+        '{botones_tienda}' => horeca_store_buttons_html($data['stores'] ?? []),
     ];
     return strtr($template, $map);
+}
+
+/** Dirección del Centro de Experiencia, con enlace a Google Maps si existe. */
+function horeca_address_html() {
+    $s = horeca_email_settings();
+    $a = trim((string) $s['visit_address']);
+    $m = trim((string) ($s['visit_maps_url'] ?? ''));
+    if ($a === '') {
+        return '';
+    }
+    return $m !== '' ? '<a href="' . esc_url($m) . '" style="color:#5b4638;font-weight:bold">' . esc_html($a) . '</a>' : esc_html($a);
+}
+
+/** Botón compatible con la mayoría de programas de correo. */
+function horeca_email_button($url, $label, $bg) {
+    return '<a href="' . esc_url($url) . '" style="display:inline-block;background:' . esc_attr($bg) . ';color:#ffffff;text-decoration:none;font-weight:bold;font-size:14px;line-height:1.3;padding:14px 22px;border-radius:10px;margin:4px">' . esc_html($label) . '</a>';
+}
+
+/** Tiendas según las marcas cotizadas: Artiq → artiq.com.co, café → distritocafetero.com. */
+function horeca_stores_for_items($items) {
+    $hasArtiq = false;
+    $hasCafe  = false;
+    foreach ((array) $items as $it) {
+        $brand = isset($it['brand']) ? (string) $it['brand'] : (string) get_post_meta((int) ($it['wcId'] ?? 0), '_horeca_brand', true);
+        if ($brand === 'artiq') {
+            $hasArtiq = true;
+        } elseif ($brand !== '') {
+            $hasCafe = true;
+        }
+    }
+    $stores = [];
+    if ($hasArtiq || !$hasCafe) {
+        $stores[] = ['label' => 'Visitar artiq.com.co', 'url' => 'https://artiq.com.co/', 'bg' => '#0da6d8'];
+    }
+    if ($hasCafe) {
+        $stores[] = ['label' => 'Visitar distritocafetero.com', 'url' => 'https://distritocafetero.com/', 'bg' => '#8b5e3c'];
+    }
+    return $stores;
+}
+
+function horeca_store_buttons_html($stores) {
+    $html = '';
+    foreach ((array) $stores as $st) {
+        $html .= horeca_email_button($st['url'], $st['label'], $st['bg']);
+    }
+    return $html;
 }
 
 function horeca_mail_headers($reply_to = '') {
@@ -297,6 +405,7 @@ function horeca_rest_crear_solicitud(WP_REST_Request $req) {
         $total   += $subtotal;
         $items[]  = [
             'wcId'     => $product->get_id(),
+            'brand'    => (string) get_post_meta($product->get_id(), '_horeca_brand', true),
             'name'     => $product->get_name(),
             'qty'      => $qty,
             'price'    => $price,
@@ -328,6 +437,8 @@ function horeca_rest_crear_solicitud(WP_REST_Request $req) {
     update_post_meta($post_id, '_h_total', $total);
     $origen = ($p['origen'] ?? '') === 'popup' ? 'Pop up' : 'Formulario de cotización';
     update_post_meta($post_id, '_h_origen', $origen);
+    $token = wp_generate_password(24, false, false);
+    update_post_meta($post_id, '_h_token', $token);
 
     $s    = horeca_email_settings();
     $data = [
@@ -338,8 +449,10 @@ function horeca_rest_crear_solicitud(WP_REST_Request $req) {
         'fecha'      => horeca_fecha_es(),
         'items'      => $items,
         'total'      => $total,
-        'tienda'     => $s['shop_url'],
+        'tienda'     => horeca_stores_for_items($items)[0]['url'],
         'visita'     => $s['visit_text'],
+        'visit_url'  => horeca_visit_url($token),
+        'stores'     => horeca_stores_for_items($items),
     ];
 
     // 1) Correo al cliente con su cotización.
@@ -400,7 +513,9 @@ add_action('admin_post_horeca_guardar_correos', function () {
         'from_name'        => sanitize_text_field(wp_unslash($_POST['from_name'] ?? '')),
         'customer_subject' => sanitize_text_field(wp_unslash($_POST['customer_subject'] ?? '')),
         'customer_body'    => trim($body) !== '' ? $body : horeca_default_customer_template(),
-        'shop_url'         => esc_url_raw(wp_unslash($_POST['shop_url'] ?? '')),
+        'shop_url'         => 'https://artiq.com.co/',
+        'visit_address'    => sanitize_text_field(wp_unslash($_POST['visit_address'] ?? '')),
+        'visit_maps_url'   => esc_url_raw(wp_unslash($_POST['visit_maps_url'] ?? '')),
         'visit_text'       => sanitize_textarea_field(wp_unslash($_POST['visit_text'] ?? '')),
         'send_customer'    => !empty($_POST['send_customer']) ? 1 : 0,
     ], false);
@@ -416,12 +531,14 @@ add_action('admin_post_horeca_guardar_correos', function () {
             'referencia' => 'SOL-PRUEBA',
             'fecha'      => horeca_fecha_es(),
             'items'      => [
-                ['name' => 'Máquina de Espresso Barista Máster', 'qty' => 1, 'price' => 2799900, 'subtotal' => 2799900],
-                ['name' => 'Molino Mignon Filtro 50MM Eureka', 'qty' => 2, 'price' => 1899900, 'subtotal' => 3799800],
+                ['name' => 'Máquina de Espresso Barista Máster', 'qty' => 1, 'price' => 2299900, 'subtotal' => 2299900, 'brand' => 'baristico'],
+                ['name' => 'Dispensador de Jugo 2 tanques con Aspas', 'qty' => 1, 'price' => 2459900, 'subtotal' => 2459900, 'brand' => 'artiq'],
             ],
-            'total'      => 6599700,
-            'tienda'     => $s['shop_url'],
+            'total'      => 4759800,
+            'tienda'     => 'https://artiq.com.co/',
             'visita'     => $s['visit_text'],
+            'visit_url'  => horeca_visit_url(),
+            'stores'     => horeca_stores_for_items([['brand' => 'artiq'], ['brand' => 'baristico']]),
         ];
         $ok  = horeca_send_mail($to, wp_strip_all_tags(horeca_fill_template($s['customer_subject'], $data)), horeca_fill_template($s['customer_body'], $data));
         $msg = $ok ? 'prueba_ok' : 'prueba_error';
@@ -471,16 +588,22 @@ function horeca_render_email_settings() {
                     <textarea id="customer_body" name="customer_body" rows="16" class="large-text code"><?php echo esc_textarea($s['customer_body']); ?></textarea>
                     <p class="description">Pega aquí el HTML de tu diseño. Puedes usar estas etiquetas y se reemplazan solas:
                         <code>{nombre}</code> <code>{whatsapp}</code> <code>{correo}</code> <code>{referencia}</code> <code>{fecha}</code>
-                        <code>{productos}</code> (tabla con equipos y total) <code>{total}</code> <code>{tienda}</code> (enlace a la tienda) <code>{visita}</code> (texto de visita).
+                        <code>{productos}</code> (tabla con equipos y total) <code>{total}</code> <code>{visita}</code> (texto de visita)
+                        <code>{boton_visita}</code> (botón para agendar) <code>{enlace_visita}</code> (enlace para agendar) <code>{direccion}</code> (dirección con enlace a Maps) <code>{botones_tienda}</code> (botón a artiq.com.co, a distritocafetero.com o a las dos, según lo cotizado).
                         Si lo dejas vacío, se usa el diseño por defecto.</p>
                 </td>
             </tr>
             <tr>
-                <th><label for="shop_url">Enlace "Comprar en la tienda"</label></th>
-                <td><input type="url" id="shop_url" name="shop_url" class="large-text" value="<?php echo esc_attr($s['shop_url']); ?>"></td>
+                <th><label for="visit_address">Dirección del Centro de Experiencia</label></th>
+                <td><input type="text" id="visit_address" name="visit_address" class="large-text" value="<?php echo esc_attr($s['visit_address']); ?>" placeholder="Ej. Calle 10 # 40-20, Bodega 3, Cali">
+                    <p class="description">Se muestra en el correo, en la página para agendar y en la confirmación de la visita.</p></td>
             </tr>
             <tr>
-                <th><label for="visit_text">Texto "Visítanos"</label></th>
+                <th><label for="visit_maps_url">Enlace de Google Maps</label></th>
+                <td><input type="url" id="visit_maps_url" name="visit_maps_url" class="large-text" value="<?php echo esc_attr($s['visit_maps_url']); ?>"></td>
+            </tr>
+            <tr>
+                <th><label for="visit_text">Texto de la visita</label></th>
                 <td><textarea id="visit_text" name="visit_text" rows="3" class="large-text"><?php echo esc_textarea($s['visit_text']); ?></textarea>
                     <p class="description">Dirección, horario o lo que quieras que diga la sección de visita.</p></td>
             </tr>
