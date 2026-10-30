@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { X, User, Mail, MessageCircle, Send, CheckCircle2, ChevronDown, Package } from 'lucide-react';
+import QuoteSuccess from './QuoteSuccess';
+import { Gift, X, User, Mail, MessageCircle, Send, CheckCircle2, ChevronDown, Package } from 'lucide-react';
 import { PRODUCTS } from '../data';
 import { Product } from '../types';
 import { sendQuoteRequest } from '../wordpress';
@@ -8,6 +9,8 @@ import PromoHielera from './PromoHielera';
 /** Segundos que espera el pop up antes de abrirse. */
 const OPEN_DELAY_MS = 8000;
 const SEEN_KEY = 'horeca_popup_visto';
+/** Estado de la pestaña lateral "Obtener oferta": '1' visible, 'enviado' ya se registró. */
+const TAB_KEY = 'horeca_popup_pestana';
 
 interface Props {
   /** No abrir el pop up mientras el cliente está en la pestaña de cotización o viendo una ficha. */
@@ -34,12 +37,29 @@ const markSeen = () => {
   }
 };
 
+const readTab = () => {
+  try {
+    return window.sessionStorage.getItem(TAB_KEY);
+  } catch {
+    return null;
+  }
+};
+const writeTab = (value: '1' | 'enviado') => {
+  try {
+    window.sessionStorage.setItem(TAB_KEY, value);
+  } catch {
+    /* sin almacenamiento: la pestaña solo dura mientras la página siga abierta */
+  }
+};
+
 /**
  * Pop up de cotización: aparece una vez por visita a los pocos segundos,
  * muestra la promoción de la hielera y un formulario corto con la máquina de interés.
  */
 export default function QuotePopup({ suppressed }: Props) {
   const [open, setOpen] = useState(false);
+  // Pestaña lateral que aparece al cerrar el pop up sin enviar la solicitud.
+  const [showTab, setShowTab] = useState(() => readTab() === '1');
   const [nombre, setNombre] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [correo, setCorreo] = useState('');
@@ -74,7 +94,7 @@ export default function QuotePopup({ suppressed }: Props) {
   // Cerrar con Esc, bloquear el scroll de fondo y enfocar el primer campo.
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && closePopup();
     document.addEventListener('keydown', onKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -86,7 +106,40 @@ export default function QuotePopup({ suppressed }: Props) {
     };
   }, [open]);
 
-  if (!open) return null;
+  function closePopup() {
+    setOpen(false);
+    if (done || readTab() === 'enviado') {
+      setShowTab(false);
+    } else {
+      writeTab('1');
+      setShowTab(true);
+    }
+  }
+
+  const reopen = () => {
+    setShowTab(false);
+    setOpen(true);
+  };
+
+  if (!open) {
+    if (!showTab || suppressed) return null;
+    return (
+      <button
+        type="button"
+        onClick={reopen}
+        aria-label="Obtener oferta: hielera de 12 kg gratis"
+        className="fixed left-0 top-1/2 -translate-y-1/2 z-[55] flex flex-col items-center gap-2 rounded-r-xl bg-artiq-500 hover:bg-artiq-600 text-white shadow-lg shadow-artiq-500/30 px-2 py-4 sm:px-2.5 sm:py-5 transition-all hover:pl-3 animate-fadeIn focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-artiq-500"
+      >
+        <Gift className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0" aria-hidden="true" />
+        <span
+          className="text-[11px] sm:text-xs font-extrabold uppercase tracking-[0.12em] whitespace-nowrap"
+          style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+        >
+          Obtener oferta
+        </span>
+      </button>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,6 +165,7 @@ export default function QuotePopup({ suppressed }: Props) {
       return;
     }
     setDone({ referencia: res.referencia, correo: correo.trim() });
+    writeTab('enviado');
   };
 
   const inputCls =
@@ -121,7 +175,7 @@ export default function QuotePopup({ suppressed }: Props) {
   return (
     <div
       className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-gray-950/60 backdrop-blur-sm animate-fadeIn"
-      onClick={() => setOpen(false)}
+      onClick={() => closePopup()}
     >
       <div
         role="dialog"
@@ -132,7 +186,7 @@ export default function QuotePopup({ suppressed }: Props) {
       >
         <button
           type="button"
-          onClick={() => setOpen(false)}
+          onClick={() => closePopup()}
           aria-label="Cerrar"
           className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-black/30 hover:bg-black/45 text-white flex items-center justify-center transition-colors"
         >
@@ -144,22 +198,14 @@ export default function QuotePopup({ suppressed }: Props) {
         </div>
 
         {done ? (
-          <div className="p-6 text-center">
-            <div className="mx-auto w-14 h-14 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mb-3">
-              <CheckCircle2 className="w-8 h-8" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-900">¡Listo, {nombre.split(' ')[0] || 'gracias'}!</h3>
-            <p className="text-sm text-gray-600 mt-2 leading-relaxed">
-              Registramos tu solicitud <span className="font-mono font-bold text-emerald-700">{done.referencia}</span>. Te enviamos la
-              cotización a <span className="font-semibold text-gray-800">{done.correo}</span> y un asesor te escribirá por WhatsApp.
-            </p>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              className="mt-5 inline-flex items-center justify-center bg-gray-900 hover:bg-gray-800 text-white text-sm font-bold px-6 py-2.5 rounded-xl transition-all"
-            >
-              Seguir viendo el catálogo
-            </button>
+          <div className="p-5 sm:p-6">
+            <QuoteSuccess
+              compact
+              referencia={done.referencia}
+              correo={done.correo}
+              buttonLabel="Seguir viendo el catálogo"
+              onButton={() => closePopup()}
+            />
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="relative p-5 sm:p-6 space-y-3.5" noValidate>
@@ -238,7 +284,7 @@ export default function QuotePopup({ suppressed }: Props) {
               <Send className="w-4 h-4" />
               {sending ? 'Enviando…' : 'Solicitar Cotización'}
             </button>
-            <button type="button" onClick={() => setOpen(false)} className="w-full text-xs font-semibold text-gray-400 hover:text-gray-600 py-1">
+            <button type="button" onClick={() => closePopup()} className="w-full text-xs font-semibold text-gray-400 hover:text-gray-600 py-1">
               Ahora no, gracias
             </button>
           </form>

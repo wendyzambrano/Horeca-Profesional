@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import QuoteSuccess from './QuoteSuccess';
 import { RequestedProductItem, Product } from '../types';
 import { PRODUCTS } from '../data';
 import { isWordPress } from '../wordpress';
@@ -149,34 +150,13 @@ export default function QuoteBuilder({
 
   if (submitted) {
     return (
-      <div className="bg-white border border-emerald-100 rounded-3xl p-8 text-center max-w-2xl mx-auto my-6 shadow-sm animate-fadeIn" id="quote-success-banner">
-        <div className="mx-auto w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mb-4">
-          <CheckCircle2 className="w-10 h-10" />
-        </div>
-        <h3 className="text-2xl font-bold text-gray-900 tracking-tight">¡Solicitud Enviada con Éxito!</h3>
-        <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-          Hemos registrado tu solicitud de cotización con la referencia <span className="font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">{referenceId}</span>.
-          {sentEmail && (
-            <> Te enviamos la cotización a <span className="font-semibold text-gray-800">{sentEmail}</span>; si no la ves, revisa la carpeta de spam.</>
-          )}
-        </p>
-        <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 text-left space-y-2 mt-6 max-w-md mx-auto text-xs text-gray-600">
-          <div className="flex justify-between">
-            <span className="font-medium text-gray-500">Estado de la solicitud:</span>
-            <span className="font-bold text-emerald-600 uppercase">Enviada a asesores</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="font-medium text-gray-500">Siguiente paso:</span>
-            <span className="text-gray-700">Un especialista oficial se comunicará contigo para formalizar la cotización</span>
-          </div>
-        </div>
-        <button
-          type="button"
-          onClick={() => setSubmitted(false)}
-          className="mt-6 inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm"
-        >
-          Solicitar Otro Equipamiento <ArrowRight className="w-3.5 h-3.5" />
-        </button>
+      <div className="bg-white border border-emerald-100 rounded-3xl p-5 sm:p-8 max-w-2xl mx-auto my-6 shadow-sm animate-fadeIn" id="quote-success-banner">
+        <QuoteSuccess
+          referencia={referenceId}
+          correo={sentEmail}
+          buttonLabel="Solicitar otro equipamiento"
+          onButton={() => setSubmitted(false)}
+        />
       </div>
     );
   }
