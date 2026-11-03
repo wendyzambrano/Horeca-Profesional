@@ -165,6 +165,7 @@ add_filter('manage_' . HORECA_CPT_SOLICITUD . '_posts_columns', function () {
         'h_nombre'  => 'Nombre',
         'h_whats'   => 'WhatsApp',
         'h_correo'  => 'Correo',
+        'h_marca'   => 'Marca',
         'h_total'   => 'Total',
         'h_origen'  => 'Origen',
         'h_correos' => 'Correo al cliente',
@@ -188,6 +189,9 @@ add_action('manage_' . HORECA_CPT_SOLICITUD . '_posts_custom_column', function (
         case 'h_correo':
             $c = (string) get_post_meta($post_id, '_h_correo', true);
             echo '<a href="mailto:' . esc_attr($c) . '">' . esc_html($c) . '</a>';
+            break;
+        case 'h_marca':
+            echo horeca_world_badges_html(horeca_worlds_for_items(get_post_meta($post_id, '_h_items', true))); // phpcs:ignore
             break;
         case 'h_total':
             echo esc_html(horeca_money((float) get_post_meta($post_id, '_h_total', true)));
@@ -280,6 +284,42 @@ function horeca_address_html() {
 /** Botón compatible con la mayoría de programas de correo. */
 function horeca_email_button($url, $label, $bg) {
     return '<a href="' . esc_url($url) . '" style="display:inline-block;background:' . esc_attr($bg) . ';color:#ffffff;text-decoration:none;font-weight:bold;font-size:14px;line-height:1.3;padding:14px 22px;border-radius:10px;margin:4px">' . esc_html($label) . '</a>';
+}
+
+/** Mundos (artiq / baristico) que aparecen en una lista de productos cotizados. */
+function horeca_worlds_for_items($items) {
+    $worlds = [];
+    foreach ((array) $items as $it) {
+        if (!is_array($it)) {
+            continue;
+        }
+        $brand = !empty($it['brand']) ? (string) $it['brand'] : (string) get_post_meta((int) ($it['wcId'] ?? 0), '_horeca_brand', true);
+        if ($brand === '') {
+            continue;
+        }
+        $worlds[$brand === 'artiq' ? 'artiq' : 'baristico'] = true;
+    }
+    return array_keys($worlds);
+}
+
+/** Isotipo + nombre de cada mundo, para las listas del panel. */
+function horeca_world_badges_html($worlds) {
+    $info = [
+        'artiq'     => ['Artiq', '#0da6d8', '#e7f6fc', 'https://artiq.com.co/wp-content/uploads/2026/08/isotipo-artiq-1.svg'],
+        'baristico' => ['Barístico', '#5b4638', '#f4f1e4', 'https://distritocafetero.com/wp-content/uploads/2026/08/Isotipo-baristico.1.svg'],
+    ];
+    $out = '';
+    foreach (['artiq', 'baristico'] as $w) {
+        if (!in_array($w, (array) $worlds, true)) {
+            continue;
+        }
+        [$label, $color, $soft, $img] = $info[$w];
+        $out .= '<span class="horeca-marca" title="' . esc_attr($label) . '" style="display:inline-flex;align-items:center;gap:6px;margin:0 6px 4px 0;padding:3px 9px 3px 3px;border-radius:999px;background:' . $soft . ';color:' . $color . ';font-weight:600;white-space:nowrap">'
+            . '<span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:999px;background:' . $color . '">'
+            . '<img src="' . esc_url($img) . '" alt="" width="15" height="15" style="width:15px;height:15px;object-fit:contain" referrerpolicy="no-referrer"></span>'
+            . esc_html($label) . '</span>';
+    }
+    return $out ?: '—';
 }
 
 /** Tiendas según las marcas cotizadas: Artiq → artiq.com.co, café → distritocafetero.com. */

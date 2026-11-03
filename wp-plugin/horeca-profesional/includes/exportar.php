@@ -141,7 +141,7 @@ function horeca_export_solicitudes_xlsx($extra_args = [], $desde = '', $hasta = 
 
     $sol_rows = [[
         'Referencia', 'Fecha', 'Hora', 'Nombre', 'WhatsApp', 'Correo', 'Origen',
-        'Productos', 'Cantidad de equipos', 'Total (COP)', 'Correo al cliente',
+        'Marca', 'Productos', 'Cantidad de equipos', 'Total (COP)', 'Correo al cliente',
         'Visita agendada', 'Hora de la visita', 'Estado de la visita',
     ]];
     $prod_rows = [[
@@ -166,7 +166,8 @@ function horeca_export_solicitudes_xlsx($extra_args = [], $desde = '', $hasta = 
             $q      = (int) ($it['qty'] ?? 1);
             $qty   += $q;
             $names[] = ($it['name'] ?? '') . ' x' . $q;
-            $brand  = ($it['brand'] ?? '') === 'artiq' ? 'Artiq' : (($it['brand'] ?? '') ? 'Barístico' : '');
+            $w      = horeca_worlds_for_items([$it]);
+            $brand  = $w ? ($w[0] === 'artiq' ? 'Artiq' : 'Barístico') : '';
             $prod_rows[] = [
                 $ref, ['date', $fecha], $nom, $wa, $mail, $brand, (string) ($it['name'] ?? ''), $q,
                 ['money', (float) ($it['price'] ?? 0)], ['money', (float) ($it['subtotal'] ?? 0)],
@@ -177,6 +178,7 @@ function horeca_export_solicitudes_xlsx($extra_args = [], $desde = '', $hasta = 
         $sol_rows[] = [
             $ref, ['date', $fecha], $hora, $nom, $wa, $mail,
             (string) get_post_meta($id, '_h_origen', true) ?: 'Formulario de cotización',
+            implode(' + ', array_map(function ($w) { return $w === 'artiq' ? 'Artiq' : 'Barístico'; }, horeca_worlds_for_items($items))),
             implode("\n", $names), $qty, ['money', (float) get_post_meta($id, '_h_total', true)],
             $mails[$mc] ?? ($mc ? $mc : ''),
             $v ? ['date', $v['fecha']] : '', $v['hora'] ?? '', $v['estado'] ?? '',
@@ -191,7 +193,7 @@ function horeca_export_solicitudes_xlsx($extra_args = [], $desde = '', $hasta = 
     }
 
     $sheets = [
-        ['name' => 'Solicitudes', 'rows' => $sol_rows, 'widths' => [22, 12, 8, 24, 16, 30, 22, 50, 12, 16, 18, 14, 22, 18]],
+        ['name' => 'Solicitudes', 'rows' => $sol_rows, 'widths' => [22, 12, 8, 24, 16, 30, 22, 18, 50, 12, 16, 18, 14, 22, 18]],
         ['name' => 'Productos', 'rows' => $prod_rows, 'widths' => [22, 12, 24, 16, 30, 12, 48, 10, 20, 18]],
     ];
 

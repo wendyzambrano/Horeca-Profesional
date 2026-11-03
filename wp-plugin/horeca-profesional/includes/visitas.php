@@ -193,6 +193,27 @@ add_action('init', function () {
     ]);
 });
 
+/** Mundos de la visita: guardados al agendar, o deducidos de la solicitud / productos (visitas antiguas). */
+function horeca_visit_worlds($id) {
+    $saved = get_post_meta($id, '_v_marcas', true);
+    if (is_array($saved) && $saved) {
+        return $saved;
+    }
+    $sol = (int) get_post_meta($id, '_v_solicitud', true);
+    if ($sol) {
+        return horeca_worlds_for_items(get_post_meta($sol, '_h_items', true));
+    }
+    $items = [];
+    foreach ((array) get_post_meta($id, '_v_productos', true) as $name) {
+        $name  = preg_replace('/ x\d+$/', '', (string) $name);
+        $found = get_posts(['post_type' => 'product', 'title' => $name, 'posts_per_page' => 1, 'fields' => 'ids', 'post_status' => 'any']);
+        if ($found) {
+            $items[] = ['wcId' => (int) $found[0]];
+        }
+    }
+    return horeca_worlds_for_items($items);
+}
+
 /* Columnas */
 add_filter('manage_' . HORECA_CPT_VISITA . '_posts_columns', function () {
     return [
@@ -201,6 +222,7 @@ add_filter('manage_' . HORECA_CPT_VISITA . '_posts_columns', function () {
         'v_hora'     => 'Hora',
         'title'      => 'Cliente',
         'v_whatsapp' => 'WhatsApp',
+        'v_marca'    => 'Marca',
         'v_prod'     => 'Productos',
         'v_estado'   => 'Estado',
     ];
@@ -222,6 +244,9 @@ add_action('manage_' . HORECA_CPT_VISITA . '_posts_custom_column', function ($co
                 $digits = '57' . $digits;
             }
             echo '<a href="' . esc_url('https://wa.me/' . $digits) . '" target="_blank" rel="noopener">' . esc_html($w) . '</a>';
+            break;
+        case 'v_marca':
+            echo horeca_world_badges_html(horeca_visit_worlds($id)); // phpcs:ignore
             break;
         case 'v_prod':
             echo esc_html(implode(', ', (array) get_post_meta($id, '_v_productos', true)));
@@ -277,6 +302,7 @@ add_action('add_meta_boxes_' . HORECA_CPT_VISITA, function () {
         echo '<strong>WhatsApp:</strong> ' . esc_html(get_post_meta($post->ID, '_v_whatsapp', true)) . '<br>';
         echo '<strong>Correo:</strong> ' . esc_html(get_post_meta($post->ID, '_v_correo', true) ?: '—') . '<br>';
         echo '<strong>Productos:</strong> ' . esc_html(implode(', ', (array) get_post_meta($post->ID, '_v_productos', true))) . '</p>';
+        echo '<p><strong>Marca:</strong> ' . horeca_world_badges_html(horeca_visit_worlds($post->ID)) . '</p>'; // phpcs:ignore
         if ($sol) {
             echo '<p><a href="' . esc_url(admin_url('post.php?post=' . $sol . '&action=edit')) . '">Ver la solicitud de cotización</a></p>';
         }
@@ -380,8 +406,10 @@ function horeca_rest_crear_visita(WP_REST_Request $req) {
     // Productos: los de la solicitud del correo o el elegido en la página.
     $sol_id    = horeca_find_solicitud_by_token($token);
     $productos = [];
+    $marcas    = [];
     $correo    = '';
     if ($sol_id) {
+        $marcas = horeca_worlds_for_items(get_post_meta($sol_id, '_h_items', true));
         foreach ((array) get_post_meta($sol_id, '_h_items', true) as $it) {
             $productos[] = (string) $it['name'] . ((int) ($it['qty'] ?? 1) > 1 ? ' x' . (int) $it['qty'] : '');
         }
@@ -391,6 +419,7 @@ function horeca_rest_crear_visita(WP_REST_Request $req) {
         $pid = horeca_find_product_by_app_id(sanitize_key($p['producto']));
         if ($pid) {
             $productos[] = get_the_title($pid);
+            $marcas      = horeca_worlds_for_items([['wcId' => $pid]]);
         }
     }
     if (!$productos) {
@@ -430,6 +459,7 @@ function horeca_rest_crear_visita(WP_REST_Request $req) {
     update_post_meta($visit_id, '_v_whatsapp', $whatsapp);
     update_post_meta($visit_id, '_v_correo', $correo);
     update_post_meta($visit_id, '_v_productos', $productos);
+    update_post_meta($visit_id, '_v_marcas', $marcas);
     update_post_meta($visit_id, '_v_estado', 'pendiente');
     if ($sol_id) {
         update_post_meta($visit_id, '_v_solicitud', $sol_id);
