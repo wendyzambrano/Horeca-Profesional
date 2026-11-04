@@ -5,6 +5,7 @@ import { PRODUCTS } from '../data';
 import { Product } from '../types';
 import { sendQuoteRequest } from '../wordpress';
 import PromoHielera from './PromoHielera';
+import PromoKitCafe from './PromoKitCafe';
 
 /** Segundos que espera el pop up antes de abrirse. */
 const OPEN_DELAY_MS = 8000;
@@ -15,6 +16,8 @@ const TAB_KEY = 'horeca_popup_pestana';
 interface Props {
   /** No abrir el pop up mientras el cliente está en la pestaña de cotización o viendo una ficha. */
   suppressed: boolean;
+  /** Mundo en el que está el cliente (p. ej. al entrar por el QR de /#artiq o /#baristico). */
+  world?: 'all' | 'artiq' | 'baristico';
 }
 
 const BRAND_GROUPS: { label: string; match: (p: Product) => boolean }[] = [
@@ -56,7 +59,10 @@ const writeTab = (value: '1' | 'enviado') => {
  * Pop up de cotización: aparece una vez por visita a los pocos segundos,
  * muestra la promoción de la hielera y un formulario corto con la máquina de interés.
  */
-export default function QuotePopup({ suppressed }: Props) {
+export default function QuotePopup({ suppressed, world = 'all' }: Props) {
+  // Barístico muestra el kit de café; Artiq y el catálogo general, la hielera.
+  const isCafe = world === 'baristico';
+  const groups = world === 'artiq' ? BRAND_GROUPS.slice(0, 1) : world === 'baristico' ? BRAND_GROUPS.slice(1) : BRAND_GROUPS;
   const [open, setOpen] = useState(false);
   // Pestaña lateral que aparece al cerrar el pop up sin enviar la solicitud.
   const [showTab, setShowTab] = useState(() => readTab() === '1');
@@ -85,6 +91,12 @@ export default function QuotePopup({ suppressed }: Props) {
     }, OPEN_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, []);
+
+  // Si el cliente cambia de mundo, la máquina elegida debe ser de ese mundo.
+  useEffect(() => {
+    if (maquina && !groups.some((g) => PRODUCTS.some((p) => p.id === maquina && g.match(p)))) setMaquina('');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [world]);
 
   // Al corregir un campo, se quita el mensaje de error.
   useEffect(() => {
@@ -127,8 +139,12 @@ export default function QuotePopup({ suppressed }: Props) {
       <button
         type="button"
         onClick={reopen}
-        aria-label="Obtener oferta: hielera de 12 kg gratis"
-        className="fixed left-0 top-1/2 -translate-y-1/2 z-[55] flex flex-col items-center gap-2 rounded-r-xl bg-artiq-500 hover:bg-artiq-600 text-white shadow-lg shadow-artiq-500/30 px-2 py-4 sm:px-2.5 sm:py-5 transition-all hover:pl-3 animate-fadeIn focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-artiq-500"
+        aria-label={isCafe ? "Obtener oferta: kit de accesorios de café gratis" : "Obtener oferta: hielera de 12 kg gratis"}
+        className={`fixed left-0 top-1/2 -translate-y-1/2 z-[55] flex flex-col items-center gap-2 rounded-r-xl text-white shadow-lg px-2 py-4 sm:px-2.5 sm:py-5 transition-all hover:pl-3 animate-fadeIn focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+          isCafe
+            ? 'bg-[#5b4638] hover:bg-[#3b2c23] text-[#f4f1e4] shadow-[#5b4638]/30 focus-visible:ring-[#5b4638]'
+            : 'bg-artiq-500 hover:bg-artiq-600 shadow-artiq-500/30 focus-visible:ring-artiq-500'
+        }`}
       >
         <Gift className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0" aria-hidden="true" />
         <span
@@ -194,7 +210,7 @@ export default function QuotePopup({ suppressed }: Props) {
         </button>
 
         <div className="p-3 sm:p-4 pb-0 sm:pb-0">
-          <PromoHielera compact />
+          {isCafe ? <PromoKitCafe /> : <PromoHielera compact />}
         </div>
 
         {done ? (
@@ -251,7 +267,7 @@ export default function QuotePopup({ suppressed }: Props) {
                 <select id="popup-maquina" required value={maquina} onChange={(e) => setMaquina(e.target.value)}
                   className={`${inputCls} pr-9 appearance-none ${maquina ? '' : 'text-gray-400'}`}>
                   <option value="" disabled>Elige una máquina</option>
-                  {BRAND_GROUPS.map((g) => {
+                  {groups.map((g) => {
                     const items = PRODUCTS.filter(g.match);
                     if (!items.length) return null;
                     return (
@@ -280,7 +296,9 @@ export default function QuotePopup({ suppressed }: Props) {
             )}
 
             <button type="submit" disabled={sending}
-              className="w-full flex items-center justify-center gap-2 bg-artiq-600 hover:bg-artiq-700 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md disabled:opacity-60">
+              className={`w-full flex items-center justify-center gap-2 text-white font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-md disabled:opacity-60 ${
+                isCafe ? 'bg-[#5b4638] hover:bg-[#3b2c23]' : 'bg-artiq-600 hover:bg-artiq-700'
+              }`}>
               <Send className="w-4 h-4" />
               {sending ? 'Enviando…' : 'Solicitar Cotización'}
             </button>

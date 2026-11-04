@@ -6,6 +6,8 @@ import ProductDetailModal from './components/ProductDetailModal';
 import ProfitabilityCalculator from './components/ProfitabilityCalculator';
 import QuoteBuilder from './components/QuoteBuilder';
 import WorldCategoryBar from './components/WorldCategoryBar';
+import PromoKitCafe from './components/PromoKitCafe';
+import PromoHielera from './components/PromoHielera';
 import QuotePopup from './components/QuotePopup';
 import AddedToQuoteDialog from './components/AddedToQuoteDialog';
 import { 
@@ -698,6 +700,7 @@ export default function App() {
 
             {/* DUAL MUNDOS PANEL (Split visual selector) */}
             {selectedBrand !== 'all' ? (
+              <>
               <WorldCategoryBar
                 world={selectedBrand}
                 selectedCategory={selectedCategory}
@@ -706,6 +709,17 @@ export default function App() {
                   document.getElementById('mobile-catalog-sliders')?.scrollIntoView({ behavior: 'smooth' });
                 }}
               />
+              {selectedBrand === 'artiq' && (
+                <PromoHielera
+                  onShopNow={() => document.getElementById('mobile-catalog-sliders')?.scrollIntoView({ behavior: 'smooth' })}
+                />
+              )}
+              {selectedBrand === 'baristico' && (
+                <PromoKitCafe
+                  onShopNow={() => document.getElementById('mobile-catalog-sliders')?.scrollIntoView({ behavior: 'smooth' })}
+                />
+              )}
+              </>
             ) : (
             <div className={`grid-cols-1 md:grid-cols-2 gap-6 pt-2 hidden md:grid`} id="mundos-horeca">
               
@@ -1029,7 +1043,7 @@ export default function App() {
 
       {/* Product Detail Modal (Web Catalog Quick Info) */}
       {/* Pop up de cotización (aparece una vez por visita) */}
-      <QuotePopup suppressed={currentView === 'quote' || Boolean(selectedDetailProduct) || Boolean(justAddedId)} />
+      <QuotePopup world={selectedBrand} suppressed={currentView === 'quote' || Boolean(selectedDetailProduct) || Boolean(justAddedId)} />
 
       {/* Aviso al tocar "Cotizar" en una tarjeta */}
       <AddedToQuoteDialog
