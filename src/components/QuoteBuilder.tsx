@@ -5,6 +5,7 @@ import { PRODUCTS } from '../data';
 import { isWordPress } from '../wordpress';
 import { Trash2, ShoppingBag, Send, ArrowRight, Building2, User, Mail, Phone, MapPin, AlignLeft, CheckCircle2, MessageCircle } from 'lucide-react';
 import PromoHielera from './PromoHielera';
+import PromoKitCafe from './PromoKitCafe';
 
 interface QuoteBuilderProps {
   quoteItems: RequestedProductItem[];
@@ -80,6 +81,18 @@ export default function QuoteBuilder({
     const prod = getProductDetails(item.productId);
     return prod && prod.brand === 'artiq' ? sum + prod.price * item.quantity : sum;
   }, 0);
+  // Total en productos Barístico (para el kit de accesorios de café).
+  const baristicoTotal = quoteItems.reduce((sum, item) => {
+    const prod = getProductDetails(item.productId);
+    return prod && prod.brand !== 'artiq' ? sum + prod.price * item.quantity : sum;
+  }, 0);
+  const hasArtiq = quoteItems.some((item) => getProductDetails(item.productId)?.brand === 'artiq');
+  const hasCafe = quoteItems.some((item) => {
+    const prod = getProductDetails(item.productId);
+    return Boolean(prod && prod.brand !== 'artiq');
+  });
+  // Regalo según lo que el cliente cotiza: Artiq → hielera, Barístico → kit de café, ambos → los dos.
+  const showHielera = hasArtiq || !hasCafe;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -289,7 +302,10 @@ export default function QuoteBuilder({
         <form id="quote-form" onSubmit={handleSubmit} className="relative scroll-mt-32 bg-white border border-gray-100 rounded-2xl p-6 shadow-sm space-y-4">
           {/* PROMOCIÓN: motiva a dejar los datos */}
           <div className="-mx-1 -mt-1">
-            <PromoHielera artiqTotal={artiqTotal} />
+            <div className="space-y-3">
+              {showHielera && <PromoHielera artiqTotal={artiqTotal} />}
+              {hasCafe && <PromoKitCafe baristicoTotal={baristicoTotal} />}
+            </div>
           </div>
 
           <h3 className="text-lg font-bold text-gray-900 pb-3 border-b border-gray-100 flex items-center gap-2">
